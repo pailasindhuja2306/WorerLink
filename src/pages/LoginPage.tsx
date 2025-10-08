@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { storage } from '../utils/storage';
 import { User, Shield, Users } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import Logo from '../asserts/skillconnect.png';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -46,8 +47,8 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-secondary-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="mx-auto h-16 w-16 bg-primary-600 rounded-full flex items-center justify-center">
-            <Users className="h-8 w-8 text-white" />
+          <div className="mx-auto h-16 w-16 rounded-full flex items-center justify-center">
+            <img className="h-16 w-16" src={Logo} alt="WorkerLink Logo" />
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             {t('auth.welcome')}
