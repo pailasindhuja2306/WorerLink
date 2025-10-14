@@ -10,9 +10,10 @@ const RegisterPage: React.FC = () => {
   const [userType, setUserType] = useState<'customer' | 'worker' | 'admin'>('customer');
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     phone: '',
-    district: '',
+    district: districts[0]?.id || '',
     gender: 'male' as 'male' | 'female' | 'other',
     password: '',
     confirmPassword: '',
@@ -114,6 +115,7 @@ const RegisterPage: React.FC = () => {
     try {
       const userData: Partial<User> = {
         name: formData.name,
+        username: formData.username,
         email: formData.email,
         phone: formData.phone,
         district: formData.district,
@@ -260,6 +262,21 @@ const RegisterPage: React.FC = () => {
               </div>
 
               <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  {t('label.username')}
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  required
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   {t('label.email')}
                 </label>
@@ -322,6 +339,7 @@ const RegisterPage: React.FC = () => {
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                   value={formData.district}
                   onChange={handleInputChange}
+                  disabled
                 >
                   <option value="">{t('select.district')}</option>
                   {districts.map(district => (

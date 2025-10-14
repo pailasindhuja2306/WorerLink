@@ -72,6 +72,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
       const newUser: User = {
         id: Date.now().toString(),
         name: userData.name || '',
+        username: (userData as any).username || (userData.email ? (userData.email.split('@')[0] || '') : ''),
         email: normalizedEmail,
         phone: userData.phone || '',
         district: userData.district || '',

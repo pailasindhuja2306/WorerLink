@@ -1,12 +1,7 @@
 import { Worker, Customer, Booking, District, Profession, Category, User } from '../types';
 
 export const districts: District[] = [
-  { id: '1', name: 'chitoor', state: 'Andhra Pradesh' },
-  { id: '2', name: 'kadapa', state: 'Andhra Pradesh' },
-  { id: '3', name: 'kurnool', state: 'Andhra Pradesh' },
-  { id: '4', name: 'nellore', state: 'Andhra Pradesh' },
-  { id: '5', name: 'tirupati', state: 'Andhra Pradesh' },
-  { id: '6', name: 'vizianagaram', state: 'Andhra Pradesh' },
+  { id: '1', name: 'Chittoor', state: 'Andhra Pradesh' },
 ];
 
 export const categories: Category[] = [
@@ -71,6 +66,7 @@ export const mockWorkers: Worker[] = [
   {
     id: '1',
     name: 'Priya Sharma',
+    username: 'priya',
     email: 'priya@example.com',
     phone: '9876543210',
     district: '1',
@@ -97,6 +93,7 @@ export const mockWorkers: Worker[] = [
   {
     id: '2',
     name: 'Rajesh Kumar',
+    username: 'rajesh',
     email: 'rajesh@example.com',
     phone: '9876543211',
     district: '1',
@@ -123,9 +120,10 @@ export const mockWorkers: Worker[] = [
   {
     id: '3',
     name: 'Sunita Devi',
+    username: 'sunita',
     email: 'sunita@example.com',
     phone: '9876543212',
-    district: '2',
+    district: '1',
     gender: 'female',
     type: 'worker',
     profession: 'Cook',
@@ -143,9 +141,10 @@ export const mockWorkers: Worker[] = [
   {
     id: '4',
     name: 'Vikram Singh',
+    username: 'vikram',
     email: 'vikram@example.com',
     phone: '9876543213',
-    district: '3',
+    district: '1',
     type: 'worker', gender: 'male',
     profession: 'Plumber',
     category: '3',
@@ -162,6 +161,7 @@ export const mockWorkers: Worker[] = [
   {
     id: '5',
     name: 'Meera Patel',
+    username: 'meera',
     email: 'meera@example.com',
     phone: '9876543214',
     district: '1',
@@ -185,6 +185,7 @@ export const mockCustomers: Customer[] = [
   {
     id: '1',
     name: 'Amit Shah',
+    username: 'amit',
     email: 'amit@example.com',
     phone: '9876543201',
     district: '1',
@@ -204,9 +205,10 @@ export const mockCustomers: Customer[] = [
   {
     id: '2',
     name: 'Kavita Desai',
+    username: 'kavita',
     email: 'kavita@example.com',
     phone: '9876543202',
-    district: '2',
+    district: '1',
     gender: 'female',
     currentLocation: {
       latitude: 19.1136,
@@ -226,6 +228,7 @@ export const mockCustomers: Customer[] = [
 export const mockAdmin: User = {
   id: 'admin-1',
   name: 'Admin User',
+  username: 'admin',
   email: 'admin@labourlink.com',
   phone: '9876543000',
   district: '1',
