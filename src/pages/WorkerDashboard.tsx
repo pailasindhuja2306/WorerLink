@@ -344,7 +344,7 @@ const WorkerDashboard: React.FC = () => {
                   {locationSharingEnabled ? t('btn.share_location_on') : t('btn.share_location_off')}
                 </button>
               </div>
-              <span className="text-sm text-gray-700">{t('header.welcome')}, {worker.name}</span>
+              <span className="text-sm text-gray-700">{t('header.welcome')}, {worker.username ? `@${worker.username}` : worker.name}</span>
               <Link to="/login" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
                 {t('btn.logout')}
               </Link>

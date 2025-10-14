@@ -237,7 +237,7 @@ const AdminDashboard = () => {
               <span className="ml-4 text-sm text-gray-500">{t('header.admin')}</span>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">Welcome, {user?.name}</span>
+              <span className="text-sm text-gray-700">Welcome, {user?.username ? `@${user.username}` : user?.name}</span>
               <button
                 onClick={logout}
                 className="flex items-center text-sm text-gray-500 hover:text-gray-700"
