@@ -1,30 +1,18 @@
-const { Sequelize } = require('sequelize');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-// Database configuration
-const sequelize = new Sequelize({
-  dialect: process.env.DB_DIALECT || 'sqlite',
-  storage: process.env.DB_DIALECT === 'sqlite' ? './database.sqlite' : undefined,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  define: {
-    timestamps: true,
-    underscored: true,
-  }
-});
-
-// Test database connection
-const testConnection = async () => {
+const connectDB = async () => {
   try {
-    await sequelize.authenticate();
-    console.log('✅ Database connection established successfully.');
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/labourlink', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('❌ Unable to connect to the database:', error);
+    console.error('❌ MongoDB connection error:', error);
+    process.exit(1);
   }
 };
 
-module.exports = { sequelize, testConnection };
+module.exports = connectDB;

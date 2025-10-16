@@ -1,120 +1,157 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+const mongoose = require('mongoose');
 
-const Booking = sequelize.define('Booking', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
+const bookingSchema = new mongoose.Schema({
   customerId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: 'customers',
-      key: 'id'
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Customer',
+    required: true
   },
   workerId: {
-    type: DataTypes.UUID,
-    allowNull: true,
-    references: {
-      model: 'workers',
-      key: 'id'
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Worker',
+    default: null
   },
   task: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [3, 200]
-    }
+    type: String,
+    required: [true, 'Task is required'],
+    trim: true,
+    minlength: [3, 'Task must be at least 3 characters'],
+    maxlength: [200, 'Task cannot exceed 200 characters']
   },
   description: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [10, 1000]
-    }
+    type: String,
+    required: [true, 'Description is required'],
+    trim: true,
+    minlength: [10, 'Description must be at least 10 characters'],
+    maxlength: [1000, 'Description cannot exceed 1000 characters']
   },
   scheduledDate: {
-    type: DataTypes.DATE,
-    allowNull: false
+    type: Date,
+    required: [true, 'Scheduled date is required']
   },
   estimatedDuration: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    validate: {
-      min: 1,
-      max: 24
-    }
+    type: Number,
+    required: [true, 'Estimated duration is required'],
+    min: [1, 'Duration must be at least 1 hour'],
+    max: [24, 'Duration cannot exceed 24 hours']
   },
   status: {
-    type: DataTypes.ENUM(
-      'pending_admin',
-      'admin_verified',
-      'worker_assigned',
-      'accepted',
-      'rejected',
-      'in_progress',
-      'completed',
-      'cancelled'
-    ),
-    allowNull: false,
-    defaultValue: 'pending_admin'
+    type: String,
+    enum: {
+      values: [
+        'pending_admin',
+        'admin_verified',
+        'worker_assigned',
+        'accepted',
+        'rejected',
+        'in_progress',
+        'completed',
+        'cancelled'
+      ],
+      message: 'Invalid status'
+    },
+    default: 'pending_admin'
   },
   paymentMethod: {
-    type: DataTypes.ENUM('cash', 'online'),
-    allowNull: false,
-    defaultValue: 'cash'
+    type: String,
+    enum: {
+      values: ['cash', 'online'],
+      message: 'Payment method must be cash or online'
+    },
+    default: 'cash'
   },
   totalAmount: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
-    validate: {
-      min: 0
-    }
+    type: Number,
+    required: [true, 'Total amount is required'],
+    min: [0, 'Amount cannot be negative']
   },
   location: {
-    type: DataTypes.JSON,
-    allowNull: false,
-    defaultValue: {}
+    address: {
+      type: String,
+      required: [true, 'Address is required']
+    },
+    district: String,
+    mandal: String,
+    pincode: String,
+    coordinates: {
+      latitude: Number,
+      longitude: Number
+    }
   },
   liveLocationSharing: {
-    type: DataTypes.JSON,
-    allowNull: true,
-    defaultValue: null
+    enabled: {
+      type: Boolean,
+      default: false
+    },
+    customerLocation: {
+      latitude: Number,
+      longitude: Number,
+      address: String,
+      lastUpdated: Date
+    },
+    workerLocation: {
+      latitude: Number,
+      longitude: Number,
+      address: String,
+      lastUpdated: Date
+    }
   },
   adminNotes: {
-    type: DataTypes.TEXT,
-    allowNull: true
+    type: String,
+    trim: true
   },
   contactDetailsShared: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
+    type: Boolean,
+    default: false
   },
   adminVerification: {
-    type: DataTypes.JSON,
-    allowNull: true,
-    defaultValue: null
+    customerVerified: {
+      type: Boolean,
+      default: false
+    },
+    workerVerified: {
+      type: Boolean,
+      default: false
+    },
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    verifiedAt: Date,
+    callNotes: String
   },
-  completedAt: {
-    type: DataTypes.DATE,
-    allowNull: true
+  completedAt: Date,
+  cancelledAt: Date,
+  cancellationReason: String,
+  customerRating: {
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5
+    },
+    comment: String,
+    ratedAt: Date
   },
-  cancelledAt: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  cancellationReason: {
-    type: DataTypes.TEXT,
-    allowNull: true
+  workerRating: {
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5
+    },
+    comment: String,
+    ratedAt: Date
   }
 }, {
-  tableName: 'bookings'
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-module.exports = Booking;
+// Index for better query performance
+bookingSchema.index({ customerId: 1 });
+bookingSchema.index({ workerId: 1 });
+bookingSchema.index({ status: 1 });
+bookingSchema.index({ scheduledDate: 1 });
+bookingSchema.index({ createdAt: -1 });
+
+module.exports = mongoose.model('Booking', bookingSchema);

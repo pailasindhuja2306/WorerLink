@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const connectDB = require('./config/database');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
@@ -11,9 +12,13 @@ const customerRoutes = require('./routes/customers');
 const bookingRoutes = require('./routes/bookings');
 const locationRoutes = require('./routes/locations');
 const adminRoutes = require('./routes/admin');
+const complaintRoutes = require('./routes/complaints');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB
+connectDB();
 
 // Security middleware
 app.use(helmet());
@@ -53,6 +58,7 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/complaints', complaintRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

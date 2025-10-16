@@ -1,61 +1,72 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+const mongoose = require('mongoose');
 
-const Notification = sequelize.define('Notification', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
+const notificationSchema = new mongoose.Schema({
   userId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [1, 200]
-    }
+    type: String,
+    required: [true, 'Title is required'],
+    trim: true,
+    maxlength: [200, 'Title cannot exceed 200 characters']
   },
   message: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-      len: [1, 1000]
-    }
+    type: String,
+    required: [true, 'Message is required'],
+    trim: true,
+    maxlength: [1000, 'Message cannot exceed 1000 characters']
   },
   type: {
-    type: DataTypes.ENUM('booking', 'status_update', 'system', 'verification'),
-    allowNull: false,
-    defaultValue: 'system'
-  },
-  isRead: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  },
-  bookingId: {
-    type: DataTypes.UUID,
-    allowNull: true,
-    references: {
-      model: 'bookings',
-      key: 'id'
+    type: String,
+    required: [true, 'Type is required'],
+    enum: {
+      values: ['booking', 'status_update', 'system', 'verification', 'complaint', 'help'],
+      message: 'Invalid notification type'
     }
   },
+  isRead: {
+    type: Boolean,
+    default: false
+  },
+  bookingId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Booking',
+    default: null
+  },
+  complaintId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Complaint',
+    default: null
+  },
   metadata: {
-    type: DataTypes.JSON,
-    allowNull: true,
-    defaultValue: null
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
+  },
+  actionUrl: {
+    type: String,
+    trim: true
+  },
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high', 'urgent'],
+    default: 'medium'
+  },
+  expiresAt: {
+    type: Date,
+    default: null
   }
 }, {
-  tableName: 'notifications'
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-module.exports = Notification;
+// Index for better query performance
+notificationSchema.index({ userId: 1, isRead: 1 });
+notificationSchema.index({ type: 1 });
+notificationSchema.index({ createdAt: -1 });
+notificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
+module.exports = mongoose.model('Notification', notificationSchema);

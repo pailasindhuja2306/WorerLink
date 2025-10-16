@@ -1,101 +1,126 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/database');
+const mongoose = require('mongoose');
 
-const Worker = sequelize.define('Worker', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
-  },
+const workerSchema = new mongoose.Schema({
   userId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true
   },
   profession: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: String,
+    required: [true, 'Profession is required'],
+    trim: true
   },
   category: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: String,
+    required: [true, 'Category is required'],
+    trim: true
   },
-  skills: {
-    type: DataTypes.JSON,
-    allowNull: false,
-    defaultValue: []
-  },
+  skills: [{
+    type: String,
+    trim: true
+  }],
   experience: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-    validate: {
-      min: 0,
-      max: 50
-    }
+    type: Number,
+    required: [true, 'Experience is required'],
+    min: [0, 'Experience cannot be negative'],
+    max: [50, 'Experience cannot exceed 50 years'],
+    default: 0
   },
   hourlyRate: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
-    defaultValue: 0,
-    validate: {
-      min: 0
-    }
+    type: Number,
+    required: [true, 'Hourly rate is required'],
+    min: [0, 'Hourly rate cannot be negative'],
+    default: 0
   },
   availability: {
-    type: DataTypes.ENUM('available', 'busy', 'offline'),
-    allowNull: false,
-    defaultValue: 'available'
+    type: String,
+    enum: {
+      values: ['available', 'busy', 'offline'],
+      message: 'Availability must be available, busy, or offline'
+    },
+    default: 'available'
   },
   rating: {
-    type: DataTypes.DECIMAL(3, 2),
-    allowNull: false,
-    defaultValue: 0,
-    validate: {
-      min: 0,
-      max: 5
-    }
+    type: Number,
+    min: [0, 'Rating cannot be less than 0'],
+    max: [5, 'Rating cannot exceed 5'],
+    default: 0
   },
   totalJobs: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-    validate: {
-      min: 0
-    }
+    type: Number,
+    min: [0, 'Total jobs cannot be negative'],
+    default: 0
   },
   bio: {
-    type: DataTypes.TEXT,
-    allowNull: true
+    type: String,
+    trim: true,
+    maxlength: [500, 'Bio cannot exceed 500 characters']
   },
   profileImage: {
-    type: DataTypes.STRING,
-    allowNull: true
+    type: String,
+    default: ''
   },
   isVerified: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
+    type: Boolean,
+    default: false
   },
   verificationDate: {
-    type: DataTypes.DATE,
-    allowNull: true
+    type: Date
   },
   verificationNotes: {
-    type: DataTypes.TEXT,
-    allowNull: true
+    type: String,
+    trim: true
+  },
+  documents: [{
+    type: {
+      type: String,
+      enum: ['aadhar', 'pan', 'driving_license', 'other'],
+      required: true
+    },
+    url: {
+      type: String,
+      required: true
+    },
+    verified: {
+      type: Boolean,
+      default: false
+    },
+    uploadedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  bankDetails: {
+    accountNumber: String,
+    ifscCode: String,
+    bankName: String,
+    accountHolderName: String
+  },
+  emergencyContact: {
+    name: String,
+    phone: String,
+    relation: String
   }
 }, {
-  tableName: 'workers'
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-module.exports = Worker;
+// Index for better query performance
+workerSchema.index({ profession: 1 });
+workerSchema.index({ category: 1 });
+workerSchema.index({ availability: 1 });
+workerSchema.index({ isVerified: 1 });
+workerSchema.index({ rating: -1 });
+workerSchema.index({ hourlyRate: 1 });
+
+// Virtual for average rating calculation
+workerSchema.virtual('averageRating').get(function() {
+  if (this.totalJobs === 0) return 0;
+  return (this.rating / this.totalJobs).toFixed(1);
+});
+
+module.exports = mongoose.model('Worker', workerSchema);
