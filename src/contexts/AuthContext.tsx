@@ -4,7 +4,7 @@ import { storage } from '../utils/storage';
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (identifier: string, password: string) => Promise<boolean>;
   register: (userData: Partial<User>) => Promise<boolean>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => void;
@@ -39,11 +39,14 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (identifier: string, password: string): Promise<boolean> => {
     try {
       const users = storage.getUsers();
-      const normalized = email.trim().toLowerCase();
-      const foundUser = users.find(u => (u.email || '').trim().toLowerCase() === normalized);
+      const normalized = (identifier || '').trim().toLowerCase();
+      const foundUser = users.find(u =>
+        ((u.email || '').trim().toLowerCase() === normalized) ||
+        ((u.username || '').trim().toLowerCase() === normalized)
+      );
 
       if (foundUser) {
         // In a real app, you'd verify the password hash
