@@ -383,7 +383,7 @@ const CustomerDashboard: React.FC = () => {
                   {locationSharingEnabled ? t('btn.share_location_on') : t('btn.share_location_off')}
                 </button>
               </div>
-              <span className="text-sm text-gray-700">{t('header.welcome')}, {user?.name}</span>
+              <span className="text-sm text-gray-700">{t('header.welcome')}, {user?.username ? `@${user.username}` : user?.name}</span>
               <button
                 onClick={logout}
                 className="flex items-center text-sm text-gray-500 hover:text-gray-700"
