@@ -5,6 +5,8 @@ import { Worker, Booking, District, Category, Profession } from '../types';
 import { districts, categories, professions, skillsByCategory } from '../data/mockData';
 import { Search, Filter, MapPin, Star, Clock, LogOut, User, Calendar, CheckCircle, XCircle, AlertCircle, RefreshCw, Navigation, Map } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import HelpButton from '../components/HelpButton';
+import apiService from '../services/api';
 
 const CustomerDashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -41,13 +43,21 @@ const CustomerDashboard: React.FC = () => {
     applyFilters();
   }, [workers, filters]);
 
-  const loadData = () => {
-    // Force refresh from localStorage
-    const allWorkers = storage.getWorkers();
-    const userBookings = storage.getBookings().filter(booking => booking.customerId === user?.id);
-    setWorkers(allWorkers);
-    setBookings(userBookings);
-    console.log('Loaded workers:', allWorkers.length); // Debug log
+  const loadData = async () => {
+    try {
+      const allWorkers = await apiService.getWorkers();
+      const userBookings = await apiService.getBookingsByUser(user?.id || '');
+      setWorkers(allWorkers);
+      setBookings(userBookings);
+      console.log('Loaded workers:', allWorkers.length); // Debug log
+    } catch (error) {
+      console.error('Error loading data:', error);
+      // Fallback to localStorage if API fails
+      const allWorkers = storage.getWorkers();
+      const userBookings = storage.getBookings().filter(booking => booking.customerId === user?.id);
+      setWorkers(allWorkers);
+      setBookings(userBookings);
+    }
   };
 
   // Location sharing functions
@@ -234,72 +244,43 @@ const CustomerDashboard: React.FC = () => {
     setShowBookingForm(true);
   };
 
-  const handleBookingSubmit = (e: React.FormEvent) => {
+  const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedWorker || !user) return;
 
-    const newBooking: Booking = {
-      id: Date.now().toString(),
-      customerId: user.id,
-      // assign directly to the selected worker (direct connection)
-      workerId: selectedWorker.id,
-      task: bookingForm.task,
-      description: bookingForm.description,
-      scheduledDate: new Date(bookingForm.scheduledDate),
-      estimatedDuration: bookingForm.estimatedDuration,
-      status: 'worker_assigned', // assigned directly to worker
-      paymentMethod: 'cash',
-      totalAmount: selectedWorker.hourlyRate * bookingForm.estimatedDuration,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      
-      location: {
-        address: user.currentLocation?.address || 'Customer Address',
-        district: districts.find(d => d.id === user.district)?.name || 'Unknown',
-        latitude: user.currentLocation?.latitude,
-        longitude: user.currentLocation?.longitude,
-      },
-      // Share contact details immediately to enable direct connection
-      contactDetailsShared: true,
-    };
+    try {
+      const newBooking = await apiService.createBooking({
+        customerId: user.id,
+        workerId: selectedWorker.id,
+        task: bookingForm.task,
+        description: bookingForm.description,
+        scheduledDate: new Date(bookingForm.scheduledDate),
+        estimatedDuration: bookingForm.estimatedDuration,
+        status: 'worker_assigned',
+        paymentMethod: 'cash',
+        totalAmount: selectedWorker.hourlyRate * bookingForm.estimatedDuration,
+        location: {
+          address: user.currentLocation?.address || 'Customer Address',
+          district: districts.find(d => d.id === user.district)?.name || 'Unknown',
+          latitude: user.currentLocation?.latitude,
+          longitude: user.currentLocation?.longitude,
+        },
+        contactDetailsShared: true,
+      });
 
-    storage.addBooking(newBooking);
-
-    // Notify worker about the new booking
-    const workerNotification = {
-      id: Date.now().toString() + '_worker_booking',
-      userId: selectedWorker.id,
-      title: 'New Booking Assigned',
-      message: `You have a new booking: ${newBooking.task} on ${newBooking.scheduledDate.toLocaleString()}`,
-      type: 'booking' as const,
-      isRead: false,
-      createdAt: new Date(),
-      bookingId: newBooking.id,
-    };
-
-    // Optional: notify customer as confirmation
-    const customerNotification = {
-      id: Date.now().toString() + '_customer_booking',
-      userId: user.id,
-      title: 'Booking Confirmed',
-      message: `Your booking for ${newBooking.task} has been sent to ${selectedWorker.name}.`,
-      type: 'booking' as const,
-      isRead: false,
-      createdAt: new Date(),
-      bookingId: newBooking.id,
-    };
-
-    storage.addNotification(workerNotification);
-    storage.addNotification(customerNotification);
-    loadData();
-    setShowBookingForm(false);
-    setSelectedWorker(null);
-    setBookingForm({
-      task: '',
-      description: '',
-      scheduledDate: '',
-      estimatedDuration: 1,
-    });
+      await loadData();
+      setShowBookingForm(false);
+      setSelectedWorker(null);
+      setBookingForm({
+        task: '',
+        description: '',
+        scheduledDate: '',
+        estimatedDuration: 1,
+      });
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      alert('Failed to create booking. Please try again.');
+    }
   };
 
   const getStatusIcon = (status: string, contactDetailsShared?: boolean) => {
@@ -810,6 +791,9 @@ const CustomerDashboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Help Button */}
+      <HelpButton />
 
       {/* Booking Modal */}
       {showBookingForm && selectedWorker && (

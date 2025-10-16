@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Worker, Customer } from '../types';
 import { storage } from '../utils/storage';
+import apiService from '../services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -41,18 +42,10 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
 
   const login = async (identifier: string, password: string): Promise<boolean> => {
     try {
-      const users = storage.getUsers();
-      const normalized = (identifier || '').trim().toLowerCase();
-      const foundUser = users.find(u =>
-        ((u.email || '').trim().toLowerCase() === normalized) ||
-        ((u.username || '').trim().toLowerCase() === normalized)
-      );
-
-      if (foundUser) {
-        // In a real app, you'd verify the password hash
-        // For demo purposes, we'll accept any password
-        setUser(foundUser);
-        storage.setCurrentUser(foundUser);
+      const response = await apiService.login(identifier, password);
+      if (response.user) {
+        setUser(response.user);
+        storage.setCurrentUser(response.user);
         return true;
       }
       return false;
@@ -64,82 +57,13 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
 
   const register = async (userData: Partial<User>): Promise<boolean> => {
     try {
-      const users = storage.getUsers();
-      const normalizedEmail = (userData.email || '').trim().toLowerCase();
-      const existingUser = users.find(u => (u.email || '').trim().toLowerCase() === normalizedEmail);
-
-      if (existingUser) {
-        return false; // User already exists
+      const response = await apiService.register(userData);
+      if (response.user) {
+        setUser(response.user);
+        storage.setCurrentUser(response.user);
+        return true;
       }
-
-      const newUser: User = {
-        id: Date.now().toString(),
-        name: userData.name || '',
-        username: (userData as any).username || (userData.email ? (userData.email.split('@')[0] || '') : ''),
-        email: normalizedEmail,
-        phone: userData.phone || '',
-        district: userData.district || '',
-        type: userData.type || 'customer',
-        gender: userData.gender || 'male',
-        createdAt: new Date(),
-      };
-
-      // Add to appropriate storage based on user type
-      if (newUser.type === 'worker') {
-        const workerData = userData as Partial<Worker>;
-        const newWorker: Worker = {
-          ...newUser,
-          type: 'worker',
-          profession: workerData.profession || '',
-          category: workerData.category || '',
-          skills: workerData.skills || [],
-          experience: workerData.experience || 0,
-          hourlyRate: workerData.hourlyRate || 0,
-          availability: 'available',
-          rating: 0,
-          totalJobs: 0,
-          bio: workerData.bio || '',
-          isVerified: false,
-          
-        };
-        storage.addWorker(newWorker);
-        storage.addUser(newWorker);
-
-        // Add notification for all customers about new worker
-        const customers = storage.getCustomers();
-        customers.forEach(customer => {
-          const notification = {
-            id: Date.now().toString() + Math.random(),
-            userId: customer.id,
-            title: 'New Worker Available',
-            message: `${newWorker.name} (${newWorker.profession}) is now available in your area!`,
-            type: 'system' as const,
-            isRead: false,
-            createdAt: new Date(),
-          };
-          storage.addNotification(notification);
-        });
-
-        console.log('New worker registered:', newWorker.name); // Debug log
-      } else if (newUser.type === 'customer') {
-        const customerData = userData as Partial<Customer>;
-        const newCustomer: Customer = {
-          ...newUser,
-          type: 'customer',
-          preferences: customerData.preferences || {
-            maxDistance: 10,
-          },
-        };
-        storage.addCustomer(newCustomer);
-        storage.addUser(newCustomer);
-      } else if (newUser.type === 'admin') {
-        // Persist admin user so they can login later
-        storage.addUser(newUser);
-      }
-
-      setUser(newUser);
-      storage.setCurrentUser(newUser);
-      return true;
+      return false;
     } catch (error) {
       console.error('Registration error:', error);
       return false;
