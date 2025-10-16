@@ -8,6 +8,8 @@ import RegisterPage from './pages/RegisterPage';
 import CustomerDashboard from './pages/CustomerDashboard';
 import WorkerDashboard from './pages/WorkerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import UnauthorizedPage from './pages/UnauthorizedPage';
+import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -26,34 +28,36 @@ function App() {
               </div>
             </header>
             <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route
-              path="/customer"
-              element={
-                <ProtectedRoute allowedTypes={['customer']}>
-                  <CustomerDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/worker"
-              element={
-                <ProtectedRoute allowedTypes={['worker']}>
-                  <WorkerDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute allowedTypes={['admin']}>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/unauthorized" element={<UnauthorizedPage />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route
+                path="/customer"
+                element={
+                  <ProtectedRoute allowedTypes={['customer']}>
+                    <CustomerDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/worker"
+                element={
+                  <ProtectedRoute allowedTypes={['worker']}>
+                    <WorkerDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute allowedTypes={['admin']}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
         </div>
           </Router>
       </LanguageProvider>
