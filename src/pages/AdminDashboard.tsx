@@ -4,8 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { storage } from '../utils/storage';
 import { Worker, Customer, Booking, User } from '../types';
 import { districts, categories } from '../data/mockData';
-import { Users, Calendar, DollarSign, CheckCircle, XCircle, AlertCircle, LogOut, Shield, TrendingUp, Eye, UserCheck, UserX } from 'lucide-react';
+import { Users, Calendar, DollarSign, CheckCircle, XCircle, AlertCircle, LogOut, Shield, TrendingUp, Eye, UserCheck, UserX, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import HelpDashboard from '../components/HelpDashboard';
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
@@ -13,7 +14,7 @@ const AdminDashboard = () => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [activeTab, setActiveTab] = useState<'overview' | 'workers' | 'bookings' | 'verification'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'workers' | 'bookings' | 'verification' | 'help'>('overview');
   const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [verificationForm, setVerificationForm] = useState({
@@ -289,6 +290,16 @@ const AdminDashboard = () => {
                 }`}
             >
               Verification ({bookings.filter((b: Booking) => b.status === 'pending_admin').length})
+            </button>
+            <button
+              onClick={() => setActiveTab('help')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'help'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+            >
+              <MessageCircle className="h-4 w-4 mr-1 inline" />
+              Help & Support
             </button>
           </nav>
         </div>
@@ -567,6 +578,10 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {activeTab === 'help' && (
+          <HelpDashboard />
         )}
       </div>
 

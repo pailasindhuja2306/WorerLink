@@ -1,46 +1,251 @@
-# Getting Started with Create React App
+# LabourLink - Connect with Skilled Workers
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, user-friendly platform that connects customers with skilled workers for various services. Built with React, Node.js, Express, and MongoDB.
 
-## Available Scripts
+## 🌟 Features
 
-In the project directory, you can run:
+### For Customers
+- **Browse Workers**: Find skilled workers by profession, location, and rating
+- **Easy Booking**: Simple booking process with instant confirmation
+- **Real-time Location Sharing**: Share your location with workers for better coordination
+- **Help & Support**: Built-in help system to contact admins for any issues
+- **Reviews & Ratings**: Rate and review workers after service completion
 
-### `npm start`
+### For Workers
+- **Profile Management**: Create detailed profiles with skills and experience
+- **Job Notifications**: Get notified about new bookings
+- **Location Sharing**: Share your location with customers
+- **Help System**: Contact admins for support and complaints
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### For Admins
+- **Dashboard**: Comprehensive admin dashboard with statistics
+- **Worker Verification**: Verify and manage worker profiles
+- **Booking Management**: Oversee all bookings and verifications
+- **Help & Support Management**: Handle customer and worker complaints/help requests
+- **Real-time Notifications**: Get notified about new help requests
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🚀 Tech Stack
 
-### `npm test`
+### Frontend
+- **React 19** with TypeScript
+- **Tailwind CSS** for styling
+- **React Router** for navigation
+- **Lucide React** for icons
+- **Context API** for state management
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Backend
+- **Node.js** with Express
+- **MongoDB** with Mongoose
+- **RESTful API** design
+- **CORS** enabled for cross-origin requests
 
-### `npm run build`
+## 📋 Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Before running this application, make sure you have the following installed:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Node.js** (v14 or higher)
+- **MongoDB** (v4.4 or higher)
+- **npm** or **yarn**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠️ Installation & Setup
 
-### `npm run eject`
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd labourlink
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 3. Set up Environment Variables
+Create a `.env` file in the root directory:
+```env
+MONGODB_URI=mongodb://localhost:27017/labourlink
+PORT=5000
+NODE_ENV=development
+REACT_APP_API_URL=http://localhost:5000/api
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### 4. Start MongoDB
+Make sure MongoDB is running on your system:
+```bash
+# On macOS with Homebrew
+brew services start mongodb-community
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# On Ubuntu/Debian
+sudo systemctl start mongod
 
-## Learn More
+# On Windows
+net start MongoDB
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 5. Run the Application
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Option 1: Run Both Frontend and Backend Together
+```bash
+npm run dev
+```
+
+#### Option 2: Run Separately
+
+**Start the Backend Server:**
+```bash
+npm run server
+```
+
+**Start the Frontend (in a new terminal):**
+```bash
+npm start
+```
+
+The application will be available at:
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:5000
+
+## 🎯 Usage
+
+### Getting Started
+
+1. **Visit the Landing Page**: Open http://localhost:3000 to see the beautiful landing page
+2. **Sign Up**: Click "Get Started" to create a new account
+3. **Choose Your Role**: Register as a Customer, Worker, or Admin
+4. **Start Using**: Access your dashboard based on your role
+
+### User Roles
+
+#### Customer
+- Browse available workers
+- Filter by profession, location, and rating
+- Book workers for services
+- Share location for better coordination
+- Rate and review workers
+- Contact admin for help
+
+#### Worker
+- Create detailed profile with skills
+- Set hourly rates and availability
+- Receive booking notifications
+- Manage bookings and status
+- Contact admin for support
+
+#### Admin
+- Verify worker profiles
+- Manage all bookings
+- Handle help requests and complaints
+- View platform statistics
+- Oversee the entire platform
+
+## 🔧 API Endpoints
+
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+
+### Users
+- `GET /api/users` - Get all users
+- `GET /api/users/:id` - Get user by ID
+- `PUT /api/users/:id` - Update user
+
+### Workers
+- `GET /api/workers` - Get all workers
+- `GET /api/workers/:id` - Get worker by ID
+- `PUT /api/workers/:id` - Update worker
+- `PATCH /api/workers/:id/verify` - Verify worker
+
+### Customers
+- `GET /api/customers` - Get all customers
+- `GET /api/customers/:id` - Get customer by ID
+- `PUT /api/customers/:id` - Update customer
+
+### Bookings
+- `GET /api/bookings` - Get all bookings
+- `GET /api/bookings/user/:userId` - Get user's bookings
+- `POST /api/bookings` - Create booking
+- `PUT /api/bookings/:id` - Update booking
+- `PATCH /api/bookings/:id/verify` - Verify booking (admin)
+
+### Help & Support
+- `GET /api/help` - Get all help requests (admin)
+- `GET /api/help/user/:userId` - Get user's help requests
+- `POST /api/help` - Create help request
+- `PATCH /api/help/:id/status` - Update help request status
+- `PATCH /api/help/:id/assign` - Assign help request to admin
+
+## 🎨 UI Features
+
+### Modern Design
+- **Gradient Backgrounds**: Beautiful gradient backgrounds throughout the app
+- **Glassmorphism Effects**: Modern glass-like UI elements
+- **Smooth Animations**: Hover effects and transitions
+- **Responsive Design**: Works on all device sizes
+- **Custom Scrollbars**: Styled scrollbars for better UX
+
+### User Experience
+- **Floating Help Button**: Always accessible help button
+- **Real-time Updates**: Live data updates without page refresh
+- **Loading States**: Beautiful loading animations
+- **Error Handling**: User-friendly error messages
+- **Success Feedback**: Clear success notifications
+
+## 🔒 Security Features
+
+- **Input Validation**: All inputs are validated
+- **CORS Protection**: Cross-origin request protection
+- **MongoDB Injection Prevention**: Mongoose prevents NoSQL injection
+- **Error Handling**: Comprehensive error handling
+
+## 📱 Mobile Responsiveness
+
+The application is fully responsive and works seamlessly on:
+- Desktop computers
+- Tablets
+- Mobile phones
+- All screen sizes
+
+## 🚀 Deployment
+
+### Frontend Deployment (Netlify/Vercel)
+1. Build the frontend: `npm run build`
+2. Deploy the `build` folder to your hosting service
+3. Set environment variables in your hosting service
+
+### Backend Deployment (Heroku/Railway)
+1. Set up MongoDB Atlas for production database
+2. Update `MONGODB_URI` in environment variables
+3. Deploy the `server` folder to your hosting service
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -am 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+If you encounter any issues or have questions:
+
+1. **Use the Help Button**: Click the floating help button in the app
+2. **Check the Admin Dashboard**: Admins can view all help requests
+3. **Create an Issue**: Open an issue on GitHub
+4. **Contact Support**: Use the built-in help system
+
+## 🎉 Acknowledgments
+
+- **React Team** for the amazing framework
+- **Tailwind CSS** for the utility-first CSS framework
+- **MongoDB** for the flexible database
+- **Express.js** for the robust backend framework
+- **Lucide** for the beautiful icons
+
+---
+
+**LabourLink** - Connecting skilled workers with customers who need them. Built with ❤️ for the community.
