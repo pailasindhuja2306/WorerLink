@@ -598,6 +598,29 @@ const WorkerDashboard: React.FC = () => {
                     <p className="mt-1 text-sm text-gray-900">{worker.bio}</p>
                   </div>
 
+                  {/* Reviews */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Reviews</label>
+                    {(!worker.reviews || worker.reviews.length === 0) ? (
+                      <p className="mt-1 text-sm text-gray-500">No reviews yet.</p>
+                    ) : (
+                      <div className="mt-2 space-y-3">
+                        {worker.reviews.slice().reverse().map(r => (
+                          <div key={r.id} className="border rounded p-3">
+                            <div className="flex items-center text-sm text-gray-700">
+                              <Star className="h-4 w-4 text-yellow-400" />
+                              <span className="ml-1 font-medium">{r.rating}</span>
+                              <span className="ml-2 text-xs text-gray-400">{new Date(r.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            {r.comment && (
+                              <p className="mt-1 text-sm text-gray-700">{r.comment}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Skills</label>
                     <div className="mt-1 flex flex-wrap gap-2">

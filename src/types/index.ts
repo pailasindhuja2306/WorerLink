@@ -30,6 +30,7 @@ export interface Worker extends User {
   bio: string;
   profileImage?: string;
   isVerified: boolean;
+  reviews?: Review[];
 
 }
 
@@ -84,6 +85,16 @@ export interface Booking {
     verifiedAt: Date;
     callNotes: string;
   };
+}
+
+export interface Review {
+  id: string;
+  workerId: string;
+  customerId: string;
+  bookingId: string;
+  rating: number; // 1-5
+  comment?: string;
+  createdAt: Date;
 }
 
 export interface Notification {

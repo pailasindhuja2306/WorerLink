@@ -7,7 +7,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import Logo from '../asserts/skillconnect.png';
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +22,7 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      const success = await login(email, password);
+      const success = await login(identifier, password);
       if (success) {
         // Redirect to the correct dashboard based on user type
         const current = storage.getCurrentUser();
@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
           navigate('/customer');
         }
       } else {
-        setError('Invalid email or password');
+        setError(t('error.invalid_credentials'));
       }
     } catch (err) {
       setError('Login failed. Please try again.');
@@ -61,19 +61,18 @@ const LoginPage: React.FC = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="email" className="sr-only">
-                {t('auth.email_placeholder')}
+              <label htmlFor="identifier" className="sr-only">
+                {t('auth.identifier_placeholder')}
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="identifier"
+                name="identifier"
+                type="text"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder={t('auth.email_placeholder')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t('auth.identifier_placeholder')}
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
               />
             </div>
             <div>

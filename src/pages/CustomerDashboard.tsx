@@ -28,6 +28,7 @@ const CustomerDashboard: React.FC = () => {
   });
   const [activeTab, setActiveTab] = useState<'browse' | 'bookings'>('browse');
   const [locationSharingEnabled, setLocationSharingEnabled] = useState(false);
+  const [reviewForms, setReviewForms] = useState<Record<string, { rating: number; comment: string }>>({});
 
   useEffect(() => {
     loadData();
@@ -167,6 +168,61 @@ const CustomerDashboard: React.FC = () => {
     }
 
     setFilteredWorkers(filtered);
+  };
+
+  const setReviewFormField = (bookingId: string, updates: Partial<{ rating: number; comment: string }>) => {
+    setReviewForms(prev => ({
+      ...prev,
+      [bookingId]: {
+        rating: updates.rating ?? prev[bookingId]?.rating ?? 0,
+        comment: updates.comment ?? prev[bookingId]?.comment ?? '',
+      }
+    }));
+  };
+
+  const computeAverageRating = (ratings: number[]): number => {
+    if (ratings.length === 0) return 0;
+    const sum = ratings.reduce((acc, n) => acc + n, 0);
+    return parseFloat((sum / ratings.length).toFixed(1));
+  };
+
+  const handleSubmitReview = (bookingId: string) => {
+    const booking = storage.getBookings().find(b => b.id === bookingId);
+    if (!booking || !booking.workerId || !user) return;
+
+    const worker = storage.getWorkers().find(w => w.id === booking.workerId);
+    const form = reviewForms[bookingId];
+    if (!worker || !form || form.rating < 1 || form.rating > 5) {
+      alert('Please select a rating between 1 and 5');
+      return;
+    }
+
+    const newReview = {
+      id: Date.now().toString(),
+      workerId: worker.id,
+      customerId: user.id,
+      bookingId: booking.id,
+      rating: form.rating,
+      comment: (form.comment || '').trim(),
+      createdAt: new Date(),
+    };
+
+    const existingReviews = worker.reviews || [];
+    const updatedReviews = [...existingReviews, newReview];
+    const newAvg = computeAverageRating(updatedReviews.map(r => r.rating));
+
+    storage.updateWorker(worker.id, {
+      reviews: updatedReviews as any,
+      rating: newAvg,
+    });
+
+    // Optional: mark as reviewed on booking for quick checks (not strictly needed)
+    storage.updateBooking(booking.id, { adminNotes: (booking.adminNotes || '') });
+
+    // Refresh and reset
+    loadData();
+    setReviewFormField(bookingId, { rating: 0, comment: '' });
+    alert('Thank you for your feedback!');
   };
 
   const handleFilterChange = (key: string, value: string | boolean) => {
@@ -684,6 +740,56 @@ const CustomerDashboard: React.FC = () => {
                           >
                             {t('btn.cancel_booking')}
                           </button>
+                        </div>
+                      )}
+
+                      {/* Review section for completed bookings */}
+                      {booking.status === 'completed' && worker && (
+                        <div className="mt-6 border-t pt-4">
+                          <h4 className="text-sm font-medium text-gray-900 mb-2">{t('review.leave_rating')}</h4>
+                          {(() => {
+                            const alreadyReviewed = (worker.reviews || []).some(r => r.bookingId === booking.id && r.customerId === user?.id);
+                            if (alreadyReviewed) {
+                              return (
+                                <div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded p-3">
+                                  {t('review.thank_you')}
+                                </div>
+                              );
+                            }
+                            const current = reviewForms[booking.id] || { rating: 0, comment: '' };
+                            return (
+                              <div>
+                                <div className="flex items-center space-x-1 mb-2">
+                                  {[1,2,3,4,5].map(n => (
+                                    <button
+                                      key={n}
+                                      type="button"
+                                      onClick={() => setReviewFormField(booking.id, { rating: n })}
+                                      className={`p-1 rounded ${current.rating >= n ? 'text-yellow-500' : 'text-gray-300'}`}
+                                      aria-label={`Rate ${n}`}
+                                    >
+                                      <Star className="h-5 w-5" fill={current.rating >= n ? '#F59E0B' : 'none'} />
+                                    </button>
+                                  ))}
+                                </div>
+                                <textarea
+                                  rows={3}
+                                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                                  value={current.comment}
+                                  onChange={(e) => setReviewFormField(booking.id, { comment: e.target.value })}
+                                  placeholder={t('review.comment_placeholder')}
+                                />
+                                <div className="mt-3">
+                                  <button
+                                    onClick={() => handleSubmitReview(booking.id)}
+                                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                                  >
+                                    {t('review.submit')}
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       )}
                     </div>
