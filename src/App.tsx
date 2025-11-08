@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
+import SupportWidget from './components/SupportWidget';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CustomerDashboard from './pages/CustomerDashboard';
@@ -58,6 +59,9 @@ function App() {
               />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
+
+            {/* Support Widget - appears on all pages */}
+            <SupportWidget />
         </div>
           </Router>
       </LanguageProvider>

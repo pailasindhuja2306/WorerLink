@@ -4,6 +4,78 @@ export const districts: District[] = [
   { id: '1', name: 'Chittoor', state: 'Andhra Pradesh' },
 ];
 
+// Revenue Divisions with Mandals (Sub-districts)
+export interface Mandal {
+  id: string;
+  name: string;
+}
+
+export interface RevenueDivision {
+  id: string;
+  name: string;
+  mandals: Mandal[];
+}
+
+export const revenueDivisions: RevenueDivision[] = [
+  {
+    id: 'chittoor_division',
+    name: 'Chittoor Revenue Division',
+    mandals: [
+      { id: 'chittoor', name: 'Chittoor' },
+      { id: 'gudipala', name: 'Gudipala' },
+      { id: 'yadamari', name: 'Yadamari' },
+      { id: 'gangadhara_nellore', name: 'Gangadhara Nellore' },
+      { id: 'puthalapattu', name: 'Puthalapattu' },
+      { id: 'penumuru', name: 'Penumuru' },
+      { id: 'thavanampalle', name: 'Thavanampalle' },
+      { id: 'srirangarajapuram', name: 'Srirangarajapuram' },
+      { id: 'vedurukuppam', name: 'Vedurukuppam' },
+      { id: 'irala', name: 'Irala' },
+      { id: 'pothalpattu', name: 'Pothalpattu' },
+    ]
+  },
+  {
+    id: 'nagari_division',
+    name: 'Nagari Revenue Division',
+    mandals: [
+      { id: 'nagari', name: 'Nagari' },
+      { id: 'karvetinagar', name: 'Karvetinagar' },
+      { id: 'nindra', name: 'Nindra' },
+      { id: 'palasamudram', name: 'Palasamudram' },
+      { id: 'vijayapuram', name: 'Vijayapuram' },
+    ]
+  },
+  {
+    id: 'palamaneru_division',
+    name: 'Palamaneru Revenue Division',
+    mandals: [
+      { id: 'palamaneru', name: 'Palamaneru' },
+      { id: 'rompicherla', name: 'Rompicherla' },
+      { id: 'pulicherla', name: 'Pulicherla' },
+      { id: 'gangavaram', name: 'Gangavaram' },
+      { id: 'pedapanjani', name: 'Pedapanjani' },
+      { id: 'somala', name: 'Somala' },
+      { id: 'chowdepalle', name: 'Chowdepalle' },
+      { id: 'bangarupalem', name: 'Bangarupalem' },
+      { id: 'byreddipalle', name: 'Byreddipalle' },
+      { id: 'venkatagirikota', name: 'Venkatagirikota' },
+    ]
+  },
+  {
+    id: 'kuppam_division',
+    name: 'Kuppam Revenue Division',
+    mandals: [
+      { id: 'kuppam', name: 'Kuppam' },
+      { id: 'santhipuram', name: 'Santhipuram' },
+      { id: 'ramakuppam', name: 'Ramakuppam' },
+      { id: 'gudupalle', name: 'Gudupalle' },
+    ]
+  }
+];
+
+// Flat list of all mandals for easy access
+export const mandals: Mandal[] = revenueDivisions.flatMap(division => division.mandals);
+
 export const categories: Category[] = [
   { id: '1', name: 'House Cleaning', description: 'Home cleaning and maintenance', icon: '🏠' },
   { id: '2', name: 'Electrical Work', description: 'Electrical repairs and installations', icon: '⚡' },
@@ -89,6 +161,9 @@ export const mockWorkers: Worker[] = [
     bio: 'Professional house cleaner with 3 years experience. Specialized in deep cleaning and maintenance.',
     isVerified: true,
     createdAt: new Date('2023-01-15'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2023-01-16'),
+    appliedDate: new Date('2023-01-15'),
   },
   {
     id: '2',
@@ -116,6 +191,9 @@ export const mockWorkers: Worker[] = [
     bio: 'Licensed electrician with 5 years experience. Expert in residential electrical work.',
     isVerified: true,
     createdAt: new Date('2022-11-20'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2022-11-21'),
+    appliedDate: new Date('2022-11-20'),
   },
   {
     id: '3',
@@ -137,6 +215,9 @@ export const mockWorkers: Worker[] = [
     bio: 'Experienced cook specializing in traditional Indian cuisine. Can prepare meals for families.',
     isVerified: true,
     createdAt: new Date('2023-03-10'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2023-03-11'),
+    appliedDate: new Date('2023-03-10'),
   },
   {
     id: '4',
@@ -157,6 +238,9 @@ export const mockWorkers: Worker[] = [
     bio: 'Professional plumber with 6 years experience. Expert in all types of plumbing repairs.',
     isVerified: true,
     createdAt: new Date('2022-08-15'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2022-08-16'),
+    appliedDate: new Date('2022-08-15'),
   },
   {
     id: '5',
@@ -166,7 +250,7 @@ export const mockWorkers: Worker[] = [
     phone: '9876543214',
     district: '1',
     type: 'worker',
-    gender: 'male',
+    gender: 'female',
     profession: 'Gardener',
     category: '7',
     skills: ['Plant Care', 'Landscaping', 'Garden Design'],
@@ -176,8 +260,155 @@ export const mockWorkers: Worker[] = [
     rating: 4.5,
     totalJobs: 28,
     bio: 'Passionate gardener with expertise in plant care and garden maintenance.',
-    isVerified: false,
+    isVerified: true,
     createdAt: new Date('2023-06-01'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2023-06-02'),
+    appliedDate: new Date('2023-06-01'),
+  },
+  {
+    id: '6',
+    name: 'Amit Verma',
+    username: 'amit_carpenter',
+    email: 'amitv@example.com',
+    phone: '9876543215',
+    district: '1',
+    gender: 'male',
+    currentLocation: {
+      latitude: 19.0760,
+      longitude: 72.8777,
+      address: 'Mumbai Central, Maharashtra',
+      lastUpdated: new Date()
+    },
+    type: 'worker',
+    profession: 'Carpenter',
+    category: '5',
+    skills: ['Furniture Repair', 'Wood Cutting', 'Cabinet Making', 'Door Installation'],
+    experience: 7,
+    hourlyRate: 320,
+    availability: 'available',
+    rating: 4.7,
+    totalJobs: 56,
+    bio: 'Skilled carpenter specializing in furniture repair and custom woodwork. 7 years of professional experience.',
+    isVerified: true,
+    createdAt: new Date('2022-09-10'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2022-09-11'),
+    appliedDate: new Date('2022-09-10'),
+  },
+  {
+    id: '7',
+    name: 'Lakshmi Reddy',
+    username: 'lakshmi',
+    email: 'lakshmi@example.com',
+    phone: '9876543216',
+    district: '1',
+    gender: 'female',
+    currentLocation: {
+      latitude: 19.1136,
+      longitude: 72.8697,
+      address: 'Andheri West, Maharashtra',
+      lastUpdated: new Date()
+    },
+    type: 'worker',
+    profession: 'House Cleaner',
+    category: '1',
+    skills: ['Deep Cleaning', 'Floor Mopping', 'Dusting', 'Kitchen Cleaning'],
+    experience: 4,
+    hourlyRate: 220,
+    availability: 'available',
+    rating: 4.9,
+    totalJobs: 67,
+    bio: 'Professional house cleaner with focus on quality and attention to detail. Experienced in all types of cleaning.',
+    isVerified: true,
+    createdAt: new Date('2022-12-05'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2022-12-06'),
+    appliedDate: new Date('2022-12-05'),
+  },
+  {
+    id: '8',
+    name: 'Ravi Shankar',
+    username: 'ravi_painter',
+    email: 'ravi@example.com',
+    phone: '9876543217',
+    district: '1',
+    gender: 'male',
+    currentLocation: {
+      latitude: 19.0760,
+      longitude: 72.8777,
+      address: 'Mumbai Central, Maharashtra',
+      lastUpdated: new Date()
+    },
+    type: 'worker',
+    profession: 'Painter',
+    category: '6',
+    skills: ['Wall Painting', 'Exterior Painting', 'Color Matching', 'Surface Preparation'],
+    experience: 6,
+    hourlyRate: 280,
+    availability: 'available',
+    rating: 4.6,
+    totalJobs: 41,
+    bio: 'Experienced painter offering interior and exterior painting services. Quality work guaranteed.',
+    isVerified: true,
+    createdAt: new Date('2023-02-14'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2023-02-15'),
+    appliedDate: new Date('2023-02-14'),
+  },
+  {
+    id: '9',
+    name: 'Anita Joshi',
+    username: 'anita_cook',
+    email: 'anita@example.com',
+    phone: '9876543218',
+    district: '1',
+    gender: 'female',
+    currentLocation: {
+      latitude: 19.1136,
+      longitude: 72.8697,
+      address: 'Andheri West, Maharashtra',
+      lastUpdated: new Date()
+    },
+    type: 'worker',
+    profession: 'Cook',
+    category: '8',
+    skills: ['South Indian Cuisine', 'Baking', 'Meal Planning', 'Special Diets'],
+    experience: 5,
+    hourlyRate: 260,
+    availability: 'available',
+    rating: 4.8,
+    totalJobs: 53,
+    bio: 'Expert cook specializing in South Indian cuisine and healthy meal preparation.',
+    isVerified: true,
+    createdAt: new Date('2022-10-20'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2022-10-21'),
+    appliedDate: new Date('2022-10-20'),
+  },
+  {
+    id: '10',
+    name: 'Suresh Yadav',
+    username: 'suresh_farmer',
+    email: 'suresh@example.com',
+    phone: '9876543219',
+    district: '1',
+    gender: 'male',
+    type: 'worker',
+    profession: 'Farmer',
+    category: '4',
+    skills: ['Crop Planting', 'Irrigation', 'Harvesting', 'Pest Control'],
+    experience: 10,
+    hourlyRate: 200,
+    availability: 'available',
+    rating: 4.7,
+    totalJobs: 35,
+    bio: 'Experienced farmer with 10 years in agriculture. Expert in crop management and irrigation systems.',
+    isVerified: true,
+    createdAt: new Date('2023-04-08'),
+    approvalStatus: 'approved',
+    panchayatApprovalDate: new Date('2023-04-09'),
+    appliedDate: new Date('2023-04-08'),
   },
 ];
 

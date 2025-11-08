@@ -4,7 +4,7 @@ import { storage } from '../utils/storage';
 
 interface AuthContextType {
   user: User | null;
-  login: (identifier: string, password: string) => Promise<boolean>;
+  login: (mobileNumber: string, password: string) => Promise<boolean>;
   register: (userData: Partial<User>) => Promise<boolean>;
   logout: () => void;
   updateUser: (updates: Partial<User>) => void;
@@ -39,18 +39,18 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
     setIsLoading(false);
   }, []);
 
-  const login = async (identifier: string, password: string): Promise<boolean> => {
+  const login = async (mobileNumber: string, password: string): Promise<boolean> => {
     try {
       const users = storage.getUsers();
-      const normalized = (identifier || '').trim().toLowerCase();
+      const normalized = (mobileNumber || '').trim().replace(/\D/g, ''); // Remove non-numeric characters
       const foundUser = users.find(u =>
-        ((u.email || '').trim().toLowerCase() === normalized) ||
-        ((u.username || '').trim().toLowerCase() === normalized)
+        ((u.phone || '').trim().replace(/\D/g, '') === normalized)
       );
 
       if (foundUser) {
-        // In a real app, you'd verify the password hash
-        // For demo purposes, we'll accept any password
+        // In a real app, you'd verify the password hash against the stored hash
+        // For demo purposes, we'll accept any password (password param intentionally unused)
+        console.log('Demo mode: Password validation skipped');
         setUser(foundUser);
         storage.setCurrentUser(foundUser);
         return true;
@@ -100,7 +100,9 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
           totalJobs: 0,
           bio: workerData.bio || '',
           isVerified: false,
-          
+          // Panchayat approval fields - new workers start as pending
+          approvalStatus: 'pending',
+          appliedDate: new Date(),
         };
         storage.addWorker(newWorker);
         storage.addUser(newWorker);

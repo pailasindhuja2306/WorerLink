@@ -164,13 +164,14 @@ export const storage = {
       const existingUsers = storage.getUsers();
 
       const usersToAdd: User[] = [];
+      // Use phone as the unique identifier since we switched to mobile authentication
       mockWorkers.forEach((w: User) => {
-        if (!existingUsers.some(u => u.email === w.email)) usersToAdd.push(w);
+        if (!existingUsers.some(u => u.phone === w.phone || u.email === w.email)) usersToAdd.push(w);
       });
       mockCustomers.forEach((c: User) => {
-        if (!existingUsers.some(u => u.email === c.email)) usersToAdd.push(c);
+        if (!existingUsers.some(u => u.phone === c.phone || u.email === c.email)) usersToAdd.push(c);
       });
-      if (!existingUsers.some(u => u.email === mockAdmin.email)) {
+      if (!existingUsers.some(u => u.phone === mockAdmin.phone || u.email === mockAdmin.email)) {
         usersToAdd.push(mockAdmin);
       }
 
@@ -182,7 +183,7 @@ export const storage = {
 
       // Ensure workers list contains mock workers
       const existingWorkers = storage.getWorkers();
-      const workersToAdd = mockWorkers.filter((w: Worker) => !existingWorkers.some(ew => ew.email === w.email));
+      const workersToAdd = mockWorkers.filter((w: Worker) => !existingWorkers.some(ew => ew.phone === w.phone || ew.email === w.email));
       if (existingWorkers.length === 0 && mockWorkers.length > 0) {
         storage.setWorkers([...mockWorkers]);
       } else if (workersToAdd.length > 0) {
@@ -191,7 +192,7 @@ export const storage = {
 
       // Ensure customers list contains mock customers
       const existingCustomers = storage.getCustomers();
-      const customersToAdd = mockCustomers.filter((c: Customer) => !existingCustomers.some(ec => ec.email === c.email));
+      const customersToAdd = mockCustomers.filter((c: Customer) => !existingCustomers.some(ec => ec.phone === c.phone || ec.email === c.email));
       if (existingCustomers.length === 0 && mockCustomers.length > 0) {
         storage.setCustomers([...mockCustomers]);
       } else if (customersToAdd.length > 0) {

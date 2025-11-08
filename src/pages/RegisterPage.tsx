@@ -7,7 +7,7 @@ import { Users, UserCheck, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const RegisterPage: React.FC = () => {
-  const [userType, setUserType] = useState<'customer' | 'worker' | 'admin'>('customer');
+  const [userType, setUserType] = useState<'customer' | 'worker'>('customer');
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -139,21 +139,13 @@ const RegisterPage: React.FC = () => {
           experience: formData.experience,
           hourlyRate: formData.hourlyRate,
           bio: formData.bio,
+          // Panchayat approval fields - new workers start as pending
+          approvalStatus: 'pending',
+          appliedDate: new Date(),
         };
         const success = await register(workerData);
         if (success) {
           navigate('/worker');
-        } else {
-          setError(t('error.registration_failed'));
-        }
-      } else if (userType === 'admin') {
-        const adminData: Partial<User> = {
-          ...userData,
-          type: 'admin',
-        };
-        const success = await register(adminData);
-        if (success) {
-          navigate('/admin');
         } else {
           setError(t('error.registration_failed'));
         }
@@ -195,7 +187,7 @@ const RegisterPage: React.FC = () => {
           {/* User Type Selection */}
           <div className="mb-6">
             <label className="text-base font-medium text-gray-900">{t('register.i_want')}</label>
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={() => setUserType('customer')}
@@ -224,21 +216,6 @@ const RegisterPage: React.FC = () => {
                   <span className="ml-3 block text-sm font-medium">{t('role.worker')}</span>
                 </div>
                 <p className="mt-2 text-xs text-gray-500">{t('register.offer_services')}</p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setUserType('admin')}
-                className={`relative rounded-lg border p-4 focus:outline-none ${userType === 'admin'
-                  ? 'border-primary-500 ring-2 ring-primary-500'
-                  : 'border-gray-300'
-                  }`}
-              >
-                <div className="flex items-center">
-                  <Users className="h-5 w-5 text-primary-600" />
-                  <span className="ml-3 block text-sm font-medium">{t('role.admin')}</span>
-                </div>
-                <p className="mt-2 text-xs text-gray-500">{t('register.manage_platform')}</p>
               </button>
             </div>
           </div>
@@ -499,27 +476,7 @@ const RegisterPage: React.FC = () => {
               </>
             )}
 
-            {/* Admin Specific Fields */}
-            {userType === 'admin' && (
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="text-lg font-medium text-blue-900 mb-2">{t('admin.registration_heading')}</h3>
-                <p className="text-sm text-blue-700 mb-4">
-                  {t('register.manage_platform')}
-                </p>
-                <ul className="text-sm text-blue-700 space-y-1">
-                  <li>{t('admin.li.verify_workers')}</li>
-                  <li>{t('admin.li.review_bookings')}</li>
-                  <li>{t('admin.li.assign_workers')}</li>
-                  <li>{t('admin.li.monitor_analytics')}</li>
-                  <li>{t('admin.li.manage_disputes')}</li>
-                </ul>
-                <div className="mt-4 p-3 bg-yellow-100 rounded-md">
-                  <p className="text-sm text-yellow-800">
-                    <strong>{t('label.note_prefix')}</strong> {t('register.note')}
-                  </p>
-                </div>
-              </div>
-            )}
+
 
 
             {/* Password Fields */}

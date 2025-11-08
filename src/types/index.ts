@@ -31,6 +31,11 @@ export interface Worker extends User {
   profileImage?: string;
   isVerified: boolean;
   reviews?: Review[];
+  // Panchayat approval fields
+  approvalStatus: 'pending' | 'approved' | 'rejected';
+  panchayatApprovalDate?: Date;
+  rejectionReason?: string;
+  appliedDate: Date;
 
 }
 
@@ -49,12 +54,18 @@ export interface Booking {
   description: string;
   scheduledDate: Date;
   estimatedDuration: number; // hours
-  status: 'pending_admin' | 'admin_verified' | 'worker_assigned' | 'accepted' | 'rejected' | 'in_progress' | 'completed' | 'cancelled';
-  paymentMethod: 'cash';
+  status: 'pending_admin' | 'admin_verified' | 'worker_assigned' | 'accepted' | 'rejected' | 'in_progress' | 'completed' | 'cancelled' | 'expired';
+  paymentMethod?: string; // Payment method selected by customer (PhonePe, Net Banking, Cash on Delivery)
   totalAmount: number;
   createdAt: Date;
   updatedAt: Date;
-  
+  responseDeadline?: Date; // 15-minute deadline for worker to respond
+  workerResponseTime?: Date; // When worker actually accepted/rejected
+  remindersSent?: {
+    oneHour: boolean;
+    thirtyMin: boolean;
+  };
+
   location: {
     address: string;
     district: string;
@@ -85,6 +96,25 @@ export interface Booking {
     verifiedAt: Date;
     callNotes: string;
   };
+  // Photo upload fields
+  photos?: {
+    beforeTask?: {
+      url: string; // base64 encoded image or URL
+      uploadedAt: Date;
+      uploadedBy: string; // userId
+      fileName: string;
+      fileSize: number; // in bytes
+    };
+    afterTask?: {
+      url: string; // base64 encoded image or URL
+      uploadedAt: Date;
+      uploadedBy: string; // userId
+      fileName: string;
+      fileSize: number; // in bytes
+    };
+  };
+  taskDescription?: string; // Additional detailed task description
+  companyProxyNumber?: string; // Company-provided phone number for privacy-protected communication
 }
 
 export interface Review {
@@ -102,7 +132,7 @@ export interface Notification {
   userId: string;
   title: string;
   message: string;
-  type: 'booking' | 'status_update' | 'system';
+  type: 'booking' | 'status_update' | 'system' | 'booking_timeout' | 'task_reminder_1hr' | 'task_reminder_30min';
   isRead: boolean;
   createdAt: Date;
   bookingId?: string;
@@ -126,6 +156,32 @@ export interface Category {
   name: string;
   description: string;
   icon: string;
+}
+
+export interface WorkerStatistics {
+  totalTasksCompleted: number;
+  totalTasksInProgress: number;
+  totalTasksCancelled: number;
+  totalTasksRejected: number;
+  averageRating: number;
+  totalReviews: number;
+  totalEarnings: number;
+  successRate: number; // Percentage of completed tasks out of total assigned
+  totalTasksAssigned: number;
+  acceptanceRate: number; // Percentage of accepted tasks out of total assigned
+  monthlyTasksCompleted: { month: string; count: number }[];
+  ratingDistribution: { rating: number; count: number }[];
+}
+
+export interface SupportRequest {
+  id: string;
+  userId?: string; // Optional if user is not logged in
+  userName?: string;
+  userEmail?: string;
+  message: string;
+  status: 'pending' | 'in_progress' | 'resolved';
+  createdAt: Date;
+  resolvedAt?: Date;
 }
 
 export type UserType = 'customer' | 'worker' | 'admin';

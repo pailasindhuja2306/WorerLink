@@ -13,7 +13,7 @@ const AdminDashboard = () => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [activeTab, setActiveTab] = useState<'overview' | 'workers' | 'bookings' | 'verification'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'workers' | 'bookings' | 'verification' | 'approvals'>('overview');
   const [selectedWorker, setSelectedWorker] = useState<Worker | null>(null);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [verificationForm, setVerificationForm] = useState({
@@ -22,6 +22,9 @@ const AdminDashboard = () => {
     callNotes: '',
     adminNotes: '',
   });
+  const [showRejectionModal, setShowRejectionModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [workerToReject, setWorkerToReject] = useState<Worker | null>(null);
 
   useEffect(() => {
     loadData();
@@ -40,6 +43,67 @@ const AdminDashboard = () => {
   const handleWorkerVerification = (workerId: string, verified: boolean) => {
     storage.updateWorker(workerId, { isVerified: verified });
     loadData();
+  };
+
+  // Panchayat approval handlers
+  const handleApproveWorker = (workerId: string) => {
+    const worker = workers.find(w => w.id === workerId);
+    if (!worker) return;
+
+    storage.updateWorker(workerId, {
+      approvalStatus: 'approved',
+      panchayatApprovalDate: new Date(),
+    });
+
+    // Send notification to worker
+    const notification = {
+      id: Date.now().toString() + '_approval',
+      userId: workerId,
+      title: 'Registration Approved! 🎉',
+      message: `Congratulations! Your registration has been approved by the Panchayat office. You can now start receiving booking requests from customers.`,
+      type: 'system' as const,
+      isRead: false,
+      createdAt: new Date(),
+    };
+    storage.addNotification(notification);
+
+    loadData();
+    alert(`Worker ${worker.name} has been approved successfully!`);
+  };
+
+  const handleRejectWorker = (worker: Worker) => {
+    setWorkerToReject(worker);
+    setShowRejectionModal(true);
+  };
+
+  const confirmRejectWorker = () => {
+    if (!workerToReject || !rejectionReason.trim()) {
+      alert('Please provide a reason for rejection');
+      return;
+    }
+
+    storage.updateWorker(workerToReject.id, {
+      approvalStatus: 'rejected',
+      rejectionReason: rejectionReason.trim(),
+    });
+
+    // Send notification to worker
+    const notification = {
+      id: Date.now().toString() + '_rejection',
+      userId: workerToReject.id,
+      title: 'Registration Not Approved',
+      message: `Your registration was not approved by the Panchayat office. Reason: ${rejectionReason.trim()}. You can address the issues and reapply.`,
+      type: 'system' as const,
+      isRead: false,
+      createdAt: new Date(),
+    };
+    storage.addNotification(notification);
+
+    loadData();
+    setShowRejectionModal(false);
+    setWorkerToReject(null);
+    setRejectionReason('');
+    alert(`Worker ${workerToReject.name} has been rejected.`);
   };
 
   const handleBookingVerification = (bookingId: string) => {
@@ -289,6 +353,15 @@ const AdminDashboard = () => {
                 }`}
             >
               Verification ({bookings.filter((b: Booking) => b.status === 'pending_admin').length})
+            </button>
+            <button
+              onClick={() => setActiveTab('approvals')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'approvals'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+            >
+              Worker Approvals ({workers.filter(w => w.approvalStatus === 'pending').length})
             </button>
           </nav>
         </div>
@@ -952,6 +1025,226 @@ const AdminDashboard = () => {
                     ✅ Complete Verification & Share Contact Details
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Worker Approvals Tab */}
+      {activeTab === 'approvals' && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <UserCheck className="h-6 w-6 mr-2 text-orange-600" />
+              Pending Worker Approvals
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Review and approve worker registrations. Workers need Panchayat approval before they can receive bookings.
+            </p>
+
+            {workers.filter(w => w.approvalStatus === 'pending').length === 0 ? (
+              <div className="text-center py-12">
+                <CheckCircle className="mx-auto h-12 w-12 text-green-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No Pending Approvals</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  All worker registrations have been processed.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {workers.filter(w => w.approvalStatus === 'pending').map(worker => (
+                  <div key={worker.id} className="border border-orange-200 rounded-lg p-6 bg-orange-50">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center mb-3">
+                          <h3 className="text-lg font-semibold text-gray-900">{worker.name}</h3>
+                          <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 border border-orange-300">
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                            Pending Approval
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">Profession</p>
+                            <p className="text-sm text-gray-900">{worker.profession}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">Category</p>
+                            <p className="text-sm text-gray-900">{worker.category}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">Experience</p>
+                            <p className="text-sm text-gray-900">{worker.experience} years</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">Hourly Rate</p>
+                            <p className="text-sm text-gray-900">₹{worker.hourlyRate}/hour</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">Phone</p>
+                            <p className="text-sm text-gray-900">{worker.phone}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">Email</p>
+                            <p className="text-sm text-gray-900">{worker.email}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">District</p>
+                            <p className="text-sm text-gray-900">
+                              {districts.find(d => d.id === worker.district)?.name || worker.district}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium text-gray-500">Applied Date</p>
+                            <p className="text-sm text-gray-900">
+                              {new Date(worker.appliedDate).toLocaleDateString('en-IN', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <p className="text-xs font-medium text-gray-500 mb-1">Skills</p>
+                          <div className="flex flex-wrap gap-2">
+                            {worker.skills.map(skill => (
+                              <span
+                                key={skill}
+                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {worker.bio && (
+                          <div className="mb-4">
+                            <p className="text-xs font-medium text-gray-500 mb-1">Bio</p>
+                            <p className="text-sm text-gray-700">{worker.bio}</p>
+                          </div>
+                        )}
+
+                        <div className="flex items-center space-x-3 pt-4 border-t border-orange-200">
+                          <button
+                            onClick={() => handleApproveWorker(worker.id)}
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                          >
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Approve Worker
+                          </button>
+                          <button
+                            onClick={() => handleRejectWorker(worker)}
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          >
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Reject
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Approved Workers Summary */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <CheckCircle className="h-5 w-5 mr-2 text-green-600" />
+              Approved Workers ({workers.filter(w => w.approvalStatus === 'approved').length})
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {workers.filter(w => w.approvalStatus === 'approved').slice(0, 6).map(worker => (
+                <div key={worker.id} className="border border-green-200 rounded-lg p-4 bg-green-50">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium text-gray-900">{worker.name}</h4>
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  </div>
+                  <p className="text-sm text-gray-600">{worker.profession}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Approved: {worker.panchayatApprovalDate ? new Date(worker.panchayatApprovalDate).toLocaleDateString() : 'N/A'}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Rejected Workers Summary */}
+          {workers.filter(w => w.approvalStatus === 'rejected').length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm border p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <XCircle className="h-5 w-5 mr-2 text-red-600" />
+                Rejected Workers ({workers.filter(w => w.approvalStatus === 'rejected').length})
+              </h3>
+              <div className="space-y-3">
+                {workers.filter(w => w.approvalStatus === 'rejected').map(worker => (
+                  <div key={worker.id} className="border border-red-200 rounded-lg p-4 bg-red-50">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-medium text-gray-900">{worker.name}</h4>
+                      <XCircle className="h-4 w-4 text-red-600" />
+                    </div>
+                    <p className="text-sm text-gray-600">{worker.profession}</p>
+                    {worker.rejectionReason && (
+                      <p className="text-xs text-red-700 mt-2">
+                        <strong>Reason:</strong> {worker.rejectionReason}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Rejection Modal */}
+      {showRejectionModal && workerToReject && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Reject Worker: {workerToReject.name}
+              </h3>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Reason for Rejection <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  rows={4}
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  placeholder="Please provide a clear reason for rejection..."
+                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  This reason will be shown to the worker. Be clear and professional.
+                </p>
+              </div>
+              <div className="flex space-x-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowRejectionModal(false);
+                    setWorkerToReject(null);
+                    setRejectionReason('');
+                  }}
+                  className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmRejectWorker}
+                  className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                >
+                  Confirm Rejection
+                </button>
               </div>
             </div>
           </div>
