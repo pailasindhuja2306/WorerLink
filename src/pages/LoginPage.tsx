@@ -8,6 +8,8 @@ import Logo from '../asserts/skillconnect.png';
 
 const LoginPage: React.FC = () => {
   const [mobileNumber, setMobileNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +24,7 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      const success = await login(mobileNumber, password);
+      const success = await login(mobileNumber || email|| username, password);
       if (success) {
         // Redirect to the correct dashboard based on user type
         const current = storage.getCurrentUser();
@@ -44,22 +46,22 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-accent-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="bg-white rounded-2xl shadow-hard border border-gray-100 p-8 animate-scale-in">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-accent-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 mx-auto">
+        <div className="bg-blue rounded-2xl shadow-hard border border-gray-100 p-6 sm:p-8 animate-scale-in">
           <div className="text-center">
-            <div className="mx-auto h-20 w-20 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center shadow-lg animate-pulse-soft">
-              <img className="h-12 w-12 filter brightness-0 invert" src={Logo} alt="WorkerLink Logo" />
+            <div className="mx-auto h-14 w-14 sm:h-16 sm:w-16 rounded-full flex items-center justify-center bg-primary-100">
+              <img className="h-14 w-14 sm:h-16 sm:w-16" src={Logo} alt="skillconnect Logo" />
             </div>
-            <h2 className="mt-6 text-3xl font-extrabold text-primary-900">
+            <h2 className="mt-4 sm:mt-6 text-2xl sm:text-3xl font-extrabold text-primary-900">
               {t('auth.welcome')}
             </h2>
-            <p className="mt-2 text-sm text-gray-600 font-medium">
+            <p className="mt-2 text-xs sm:text-sm text-gray-600 font-medium">
               {t('auth.connect')}
             </p>
           </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="mobileNumber" className="sr-only">
@@ -70,8 +72,8 @@ const LoginPage: React.FC = () => {
                 name="mobileNumber"
                 type="tel"
                 required
-                className="appearance-none rounded-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-t-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:z-10 sm:text-sm transition-all duration-200"
-                placeholder="Enter your mobile number (e.g., 9876543210)"
+                className="appearance-none rounded-none relative block w-full px-3 sm:px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-t-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:z-10 text-base sm:text-sm transition-all duration-200"
+                placeholder="Mobile number"
                 value={mobileNumber}
                 onChange={(e) => setMobileNumber(e.target.value)}
                 pattern="[0-9]{10}"
@@ -88,7 +90,7 @@ const LoginPage: React.FC = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-b-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:z-10 sm:text-sm transition-all duration-200"
+                className="appearance-none rounded-none relative block w-full px-3 sm:px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-b-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent focus:z-10 text-base sm:text-sm transition-all duration-200"
                 placeholder={t('auth.password_placeholder')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -106,10 +108,10 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm sm:text-base font-bold rounded-xl text-white bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 min-h-12"
             >
                 {isLoading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
               ) : (
                 t('auth.sign_in')
               )}

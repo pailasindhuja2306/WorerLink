@@ -1,21 +1,21 @@
 {
-  "short_name": "WorkerLink App",
-  "name": "Create React App Sample",
+  "short_name": "SkillConnect",
+  "name": "SkillConnect - Worker / Customer Services",
   "icons": [
     {
-      "src": "Workerslink.png.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
-      "src": "Workerslink.png.png",
+      "src": "%PUBLIC_URL%/logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "Workerslink.png.png",
+      "src": "%PUBLIC_URL%/logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "%PUBLIC_URL%/favicon.ico",
+      "type": "image/x-icon",
+      "sizes": "64x64"
     }
   ],
   "start_url": ".",

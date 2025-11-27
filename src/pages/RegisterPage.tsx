@@ -5,6 +5,7 @@ import { User, Worker, Customer } from '../types';
 import { districts, categories, professions, skillsByCategory } from '../data/mockData';
 import { Users, UserCheck, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import Logo from '../asserts/skillconnect.png';
 
 const RegisterPage: React.FC = () => {
   const [userType, setUserType] = useState<'customer' | 'worker'>('customer');
@@ -173,7 +174,7 @@ const RegisterPage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <div className="mx-auto h-16 w-16 bg-primary-600 rounded-full flex items-center justify-center">
-            <Users className="h-8 w-8 text-white" />
+            <img className="h-16 w-16" src={Logo} alt="skillconnect Logo" />
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             {t('register.title')}

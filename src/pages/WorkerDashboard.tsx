@@ -709,28 +709,28 @@ const WorkerDashboard: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary-600">{t('app.title')}</h1>
-              <span className="ml-4 text-sm text-gray-500">{t('header.worker')}</span>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center py-3 sm:py-4 gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold text-primary-600 truncate">{t('app.title')}</h1>
+              <span className="hidden sm:inline text-xs sm:text-sm text-gray-500">{t('header.worker')}</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <button
                   onClick={locationSharingEnabled ? disableLocationSharing : enableLocationSharing}
-                  className={`flex items-center px-3 py-1 rounded-md text-sm font-medium transition-colors ${locationSharingEnabled
+                  className={`flex items-center px-2 sm:px-3 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-colors min-h-9 whitespace-nowrap ${locationSharingEnabled
                     ? 'bg-green-100 text-green-800 hover:bg-green-200'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                 >
                   <Map className="h-4 w-4 mr-1" />
-                  {locationSharingEnabled ? t('btn.share_location_on') : t('btn.share_location_off')}
+                  <span className="hidden sm:inline">{locationSharingEnabled ? t('btn.share_location_on') : t('btn.share_location_off')}</span>
                 </button>
               </div>
-              <span className="text-sm text-gray-700">{t('header.welcome')}, {worker.username ? `@${worker.username}` : worker.name}</span>
-              <Link to="/login" className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-                {t('btn.logout')}
+              <span className="text-xs sm:text-sm text-gray-700 hidden sm:inline truncate">{t('header.welcome')}, {worker.username ? `@${worker.username}` : worker.name}</span>
+              <Link to="/login" className="flex items-center text-xs sm:text-sm text-gray-500 hover:text-gray-700 min-h-9">
+                <span className="hidden sm:inline">{t('btn.logout')}</span>
               </Link>
             </div>
           </div>
@@ -777,31 +777,33 @@ const WorkerDashboard: React.FC = () => {
         {activeTab === 'bookings' && (
           <div className="space-y-4">
             {/* Sub-tabs for Active and Completed Bookings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-              <div className="flex space-x-2 border-b border-gray-200">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-2 sm:p-4 overflow-x-auto">
+              <div className="flex space-x-1 sm:space-x-2 border-b border-gray-200 min-w-min">
                 <button
                   onClick={() => setBookingsSubTab('active')}
-                  className={`flex-1 py-3 px-6 font-semibold text-sm rounded-t-md transition-all duration-200 ${
+                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${
                     bookingsSubTab === 'active'
                       ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
-                  Active Requests
-                  <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  <span className="hidden sm:inline">Active Requests</span>
+                  <span className="sm:hidden">Active</span>
+                  <span className="ml-1 px-1.5 sm:px-2 py-0.5 bg-white/20 rounded-full text-xs inline-block">
                     {bookings.filter(b => ['worker_assigned', 'accepted', 'in_progress'].includes(b.status)).length}
                   </span>
                 </button>
                 <button
                   onClick={() => setBookingsSubTab('completed')}
-                  className={`flex-1 py-3 px-6 font-semibold text-sm rounded-t-md transition-all duration-200 ${
+                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${
                     bookingsSubTab === 'completed'
                       ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
-                  Completed Bookings
-                  <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  <span className="hidden sm:inline">Completed Bookings</span>
+                  <span className="sm:hidden">Completed</span>
+                  <span className="ml-1 px-1.5 sm:px-2 py-0.5 bg-white/20 rounded-full text-xs inline-block">
                     {bookings.filter(b => b.status === 'completed').length}
                   </span>
                 </button>
@@ -820,12 +822,12 @@ const WorkerDashboard: React.FC = () => {
               .map(booking => {
               const customer = customers.find(c => c.id === booking.customerId);
               return (
-                <div key={booking.id} className="bg-white rounded-lg shadow-sm border p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-2">
-                        <h3 className="text-lg font-medium text-gray-900">{booking.task}</h3>
-                        <span className={`ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.status, booking.contactDetailsShared)}`}>
+                <div key={booking.id} className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-3 sm:gap-0">
+                    <div className="flex-1 w-full">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                        <h3 className="text-base sm:text-lg font-medium text-gray-900 break-words">{booking.task}</h3>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${getStatusColor(booking.status, booking.contactDetailsShared)}`}>
                           {getStatusIcon(booking.status, booking.contactDetailsShared)}
                             <span className="ml-1 capitalize">
                               {booking.contactDetailsShared ? t('booking.status.contact_shared') : booking.status.replace('_', ' ')}

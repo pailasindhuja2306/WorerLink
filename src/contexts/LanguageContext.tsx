@@ -31,7 +31,7 @@ const translations: Record<Lang, Record<string, string>> = {
   'auth.demo_cred_customer': 'amit@example.com / any password',
   'auth.demo_cred_worker': 'priya@example.com / any password',
   'auth.demo_cred_admin': 'admin@labourlink.com / any password',
-  'error.invalid_credentials': 'Invalid email/username or password',
+  'error.invalid_credentials': 'Invalid phone number or password',
   'error.login_failed': 'Login failed. Please try again.',
   // Register / common labels
   'register.title': 'Join SkillConnect',

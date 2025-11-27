@@ -541,31 +541,32 @@ const CustomerDashboard: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-gradient-to-r from-primary-700 to-primary-900 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-5">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-extrabold text-white drop-shadow-md">{t('app.title')}</h1>
-              <span className="ml-4 px-4 py-1.5 bg-accent-500 rounded-full text-sm text-white font-semibold shadow-lg">{t('header.customer')}</span>
-                <button
-                  onClick={loadData}
-                  className="ml-4 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
-                  title="Refresh workers list"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                </button>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center py-3 sm:py-5 gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <h1 className="text-lg sm:text-2xl font-extrabold text-white drop-shadow-md truncate">{t('app.title')}</h1>
+              <span className="hidden sm:inline px-3 py-1 bg-accent-500 rounded-full text-xs sm:text-sm text-white font-semibold shadow-lg">{t('header.customer')}</span>
+              <button
+                onClick={loadData}
+                className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 flex-shrink-0"
+                title="Refresh workers list"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 relative">
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+              <div className="flex items-center space-x-1 sm:space-x-2 relative">
                 {/* Location Sharing Toggle Button */}
                 <button
                   onClick={locationSharingEnabled ? disableLocationSharing : enableLocationSharing}
-                  className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm ${locationSharingEnabled
-                      ? 'bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 text-white hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 shadow-lg'
-                      : 'bg-white/90 text-primary-700 hover:bg-white'
+                  className={`flex items-center px-2 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm whitespace-nowrap min-h-10 ${locationSharingEnabled
+                    ? 'bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 text-white hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 shadow-lg'
+                    : 'bg-white/90 text-primary-700 hover:bg-white'
                     }`}
                 >
-                  <Map className="h-4 w-4 mr-2" />
-                  {locationSharingEnabled ? t('btn.share_location_on') : t('btn.share_location_off')}
+                  <Map className="h-4 w-4 mr-1 flex-shrink-0" />
+                  <span className="hidden sm:inline">{locationSharingEnabled ? t('btn.share_location_on') : t('btn.share_location_off')}</span>
+                  <span className="sm:hidden">{locationSharingEnabled ? 'On' : 'Off'}</span>
                 </button>
 
                 {/* Location Preference Selector */}
@@ -597,11 +598,10 @@ const CustomerDashboard: React.FC = () => {
                               setLocationPreference('current');
                               setShowLocationMenu(false);
                             }}
-                            className={`w-full text-left px-3 py-2.5 rounded-md transition-all duration-200 ${
-                              locationPreference === 'current'
+                            className={`w-full text-left px-3 py-2.5 rounded-md transition-all duration-200 ${locationPreference === 'current'
                                 ? 'bg-primary-50 text-primary-700 border border-primary-300'
                                 : 'hover:bg-gray-50 text-gray-700'
-                            }`}
+                              }`}
                           >
                             <div className="flex items-start">
                               <Navigation className={`h-5 w-5 mr-3 mt-0.5 ${locationPreference === 'current' ? 'text-primary-600' : 'text-gray-500'}`} />
@@ -621,11 +621,10 @@ const CustomerDashboard: React.FC = () => {
                               setLocationPreference('registered');
                               setShowLocationMenu(false);
                             }}
-                            className={`w-full text-left px-3 py-2.5 rounded-md transition-all duration-200 mt-1 ${
-                              locationPreference === 'registered'
+                            className={`w-full text-left px-3 py-2.5 rounded-md transition-all duration-200 mt-1 ${locationPreference === 'registered'
                                 ? 'bg-primary-50 text-primary-700 border border-primary-300'
                                 : 'hover:bg-gray-50 text-gray-700'
-                            }`}
+                              }`}
                           >
                             <div className="flex items-start">
                               <User className={`h-5 w-5 mr-3 mt-0.5 ${locationPreference === 'registered' ? 'text-primary-600' : 'text-gray-500'}`} />
@@ -644,13 +643,13 @@ const CustomerDashboard: React.FC = () => {
                   </div>
                 )}
               </div>
-              <span className="text-sm text-white font-medium">{t('header.welcome')}, {user?.username ? `@${user.username}` : user?.name}</span>
+              <span className="text-xs sm:text-sm text-white font-medium hidden sm:inline">{t('header.welcome')}, {user?.username ? `@${user.username}` : user?.name}</span>
               <button
                 onClick={logout}
-                className="flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-all duration-200"
+                className="flex items-center px-2 sm:px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs sm:text-sm font-medium rounded-lg transition-all duration-200 min-h-10"
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                {t('btn.logout')}
+                <LogOut className="h-4 w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">{t('btn.logout')}</span>
               </button>
             </div>
           </div>
@@ -660,7 +659,7 @@ const CustomerDashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Tabs */}
         <div className="mb-6">
-            <nav className="flex space-x-2 bg-white rounded-lg shadow-soft p-1">
+          <nav className="flex space-x-2 bg-white rounded-lg shadow-soft p-1">
             <button
               onClick={() => setActiveTab('browse')}
               className={`flex-1 py-3 px-6 font-semibold text-sm rounded-md transition-all duration-200 ${activeTab === 'browse'
@@ -685,15 +684,15 @@ const CustomerDashboard: React.FC = () => {
         {activeTab === 'browse' && (
           <>
             {/* Filters */}
-            <div className="bg-white rounded-xl shadow-soft border border-gray-100 p-6 mb-6">
-              <div className="flex items-center mb-5">
-                <div className="p-2 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg mr-3 shadow-sm">
+            <div className="bg-white rounded-xl shadow-soft border border-gray-100 p-4 sm:p-6 mb-6">
+              <div className="flex items-center mb-4 sm:mb-5">
+                <div className="p-2 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg mr-2 sm:mr-3 shadow-sm">
                   <Filter className="h-5 w-5 text-white" />
                 </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Filter Workers</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Filter Workers</h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Profession
@@ -766,7 +765,7 @@ const CustomerDashboard: React.FC = () => {
             </div>
 
             {/* Workers Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredWorkers.map((worker, index) => {
                 const colorClasses = [
                   'from-primary-500 to-primary-600',
@@ -779,60 +778,60 @@ const CustomerDashboard: React.FC = () => {
                 const colorClass = colorClasses[index % colorClasses.length];
 
                 return (
-                <div key={worker.id} className="bg-white rounded-xl shadow-soft border border-gray-100 hover:shadow-medium hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center">
-                        <div className={`h-14 w-14 bg-gradient-to-br ${colorClass} rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow duration-300`}>
-                          <User className="h-7 w-7 text-white" />
+                  <div key={worker.id} className="bg-white rounded-xl shadow-soft border border-gray-100 hover:shadow-medium hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
+                    <div className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center">
+                          <div className={`h-14 w-14 bg-gradient-to-br ${colorClass} rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow duration-300`}>
+                            <User className="h-7 w-7 text-white" />
+                          </div>
+                          <div className="ml-3">
+                            <h3 className="text-lg font-semibold text-gray-900">{worker.name}</h3>
+                            <p className="text-sm text-gray-600 font-medium">{worker.profession}</p>
+                          </div>
                         </div>
-                        <div className="ml-3">
-                          <h3 className="text-lg font-semibold text-gray-900">{worker.name}</h3>
-                          <p className="text-sm text-gray-600 font-medium">{worker.profession}</p>
-                        </div>
+                        {/* removed women-only badge */}
                       </div>
-                      {/* removed women-only badge */}
-                    </div>
 
-                    <div className="space-y-2.5 mb-4">
-                      <div className="flex items-center text-sm text-gray-700">
-                        <div className="p-1.5 bg-gray-100 rounded-md mr-2">
-                          <MapPin className="h-3.5 w-3.5 text-gray-600" />
+                      <div className="space-y-2.5 mb-4">
+                        <div className="flex items-center text-sm text-gray-700">
+                          <div className="p-1.5 bg-gray-100 rounded-md mr-2">
+                            <MapPin className="h-3.5 w-3.5 text-gray-600" />
+                          </div>
+                          <span className="font-medium">{districts.find(d => d.id === worker.district)?.name}</span>
                         </div>
-                        <span className="font-medium">{districts.find(d => d.id === worker.district)?.name}</span>
-                      </div>
-                      <div className="flex items-center text-sm">
-                        <div className="p-1.5 bg-warning-100 rounded-md mr-2">
-                          <Star className="h-3.5 w-3.5 text-warning-600 fill-warning-600" />
+                        <div className="flex items-center text-sm">
+                          <div className="p-1.5 bg-warning-100 rounded-md mr-2">
+                            <Star className="h-3.5 w-3.5 text-warning-600 fill-warning-600" />
+                          </div>
+                          <span className="font-semibold text-gray-900">{worker.rating}</span>
+                          <span className="ml-1 text-gray-600">({(worker.reviews || []).length} reviews)</span>
                         </div>
-                        <span className="font-semibold text-gray-900">{worker.rating}</span>
-                        <span className="ml-1 text-gray-600">({(worker.reviews || []).length} reviews)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <div className="px-3 py-1.5 bg-accent-50 border border-accent-200 rounded-lg">
-                          <span className="text-sm font-bold text-accent-700">₹{worker.hourlyRate}</span>
-                          <span className="text-xs text-accent-600 ml-1">/hour</span>
+                        <div className="flex items-center">
+                          <div className="px-3 py-1.5 bg-accent-50 border border-accent-200 rounded-lg">
+                            <span className="text-sm font-bold text-accent-700">₹{worker.hourlyRate}</span>
+                            <span className="text-xs text-accent-600 ml-1">/hour</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <p className="text-sm text-gray-600 leading-relaxed mb-4">{worker.bio}</p>
+                      <p className="text-sm text-gray-600 leading-relaxed mb-4">{worker.bio}</p>
 
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {getWorkerSkills(worker).slice(0, 3).map(skill => (
-                        <span
-                          key={skill}
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                      {getWorkerSkills(worker).length > 3 && (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                          +{getWorkerSkills(worker).length - 3} more
-                        </span>
-                      )}
-                    </div>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {getWorkerSkills(worker).slice(0, 3).map(skill => (
+                          <span
+                            key={skill}
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                        {getWorkerSkills(worker).length > 3 && (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            +{getWorkerSkills(worker).length - 3} more
+                          </span>
+                        )}
+                      </div>
 
                       <button
                         onClick={() => handleBookWorker(worker)}
@@ -840,8 +839,8 @@ const CustomerDashboard: React.FC = () => {
                       >
                         {t('btn.book_now')}
                       </button>
+                    </div>
                   </div>
-                </div>
                 );
               })}
             </div>
@@ -861,31 +860,31 @@ const CustomerDashboard: React.FC = () => {
         {activeTab === 'bookings' && (
           <div className="space-y-4">
             {/* Sub-tabs for Active and Completed Bookings */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
-              <div className="flex space-x-2 border-b border-gray-200">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-2 sm:p-4 overflow-x-auto">
+              <div className="flex space-x-1 sm:space-x-2 border-b border-gray-200 min-w-min">
                 <button
                   onClick={() => setBookingsSubTab('active')}
-                  className={`flex-1 py-3 px-6 font-semibold text-sm rounded-t-md transition-all duration-200 ${
-                    bookingsSubTab === 'active'
+                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${bookingsSubTab === 'active'
                       ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
-                  Active Bookings
-                  <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  <span className="hidden sm:inline">Active Bookings</span>
+                  <span className="sm:hidden">Active</span>
+                  <span className="ml-1 px-1.5 sm:px-2 py-0.5 bg-white/20 rounded-full text-xs inline-block">
                     {bookings.filter(b => ['pending_admin', 'admin_verified', 'worker_assigned', 'accepted', 'in_progress'].includes(b.status)).length}
                   </span>
                 </button>
                 <button
                   onClick={() => setBookingsSubTab('completed')}
-                  className={`flex-1 py-3 px-6 font-semibold text-sm rounded-t-md transition-all duration-200 ${
-                    bookingsSubTab === 'completed'
+                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${bookingsSubTab === 'completed'
                       ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
-                  Completed Bookings
-                  <span className="ml-1 px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  <span className="hidden sm:inline">Completed Bookings</span>
+                  <span className="sm:hidden">Completed</span>
+                  <span className="ml-1 px-1.5 sm:px-2 py-0.5 bg-white/20 rounded-full text-xs inline-block">
                     {bookings.filter(b => ['completed', 'cancelled'].includes(b.status)).length}
                   </span>
                 </button>
@@ -902,272 +901,264 @@ const CustomerDashboard: React.FC = () => {
                 }
               })
               .map(booking => {
-              const worker = workers.find(w => w.id === booking.workerId);
-              return (
-                <div key={booking.id} className="bg-white rounded-lg shadow-sm border p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-2">
-                        <h3 className="text-lg font-medium text-gray-900">{booking.task}</h3>
-                        <span className={`ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.status, booking.contactDetailsShared)}`}>
-                          {getStatusIcon(booking.status, booking.contactDetailsShared)}
-                          <span className="ml-1 capitalize">
-                            {booking.contactDetailsShared ? 'Contact Shared' : booking.status.replace('_', ' ')}
+                const worker = workers.find(w => w.id === booking.workerId);
+                return (
+                  <div key={booking.id} className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-3 sm:gap-0">
+                      <div className="flex-1 w-full">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                          <h3 className="text-base sm:text-lg font-medium text-gray-900 break-words">{booking.task}</h3>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${getStatusColor(booking.status, booking.contactDetailsShared)}`}>
+                            {getStatusIcon(booking.status, booking.contactDetailsShared)}
+                            <span className="ml-1 capitalize">
+                              {booking.contactDetailsShared ? 'Contact Shared' : booking.status.replace('_', ' ')}
+                            </span>
                           </span>
-                        </span>
-                      </div>
+                        </div>
 
-                      <p className="text-sm text-gray-600 mb-2">{booking.description}</p>
+                        <p className="text-sm text-gray-600 mb-2">{booking.description}</p>
 
-                      {/* Task Description */}
-                      {booking.taskDescription && (
-                        <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
-                          <p className="text-xs font-medium text-gray-700 mb-1">Additional Details:</p>
-                          <p className="text-sm text-gray-600">{booking.taskDescription}</p>
-                        </div>
-                      )}
-
-                      {/* Photos Section */}
-                      {booking.photos && (booking.photos.beforeTask || booking.photos.afterTask) && (
-                        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {booking.photos.beforeTask && (
-                            <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                              <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
-                                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Before Task Photo
-                              </p>
-                              <img
-                                src={booking.photos.beforeTask.url}
-                                alt="Before task"
-                                className="w-full h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={() => window.open(booking.photos!.beforeTask!.url, '_blank')}
-                              />
-                              <p className="text-xs text-gray-500 mt-1">
-                                Uploaded: {new Date(booking.photos.beforeTask.uploadedAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                          )}
-                          {booking.photos.afterTask && (
-                            <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                              <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
-                                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                After Task Photo
-                              </p>
-                              <img
-                                src={booking.photos.afterTask.url}
-                                alt="After task"
-                                className="w-full h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={() => window.open(booking.photos!.afterTask!.url, '_blank')}
-                              />
-                              <p className="text-xs text-gray-500 mt-1">
-                                Uploaded: {new Date(booking.photos.afterTask.uploadedAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex items-center text-sm text-gray-500 space-x-4 mt-3">
-                        <div className="flex items-center">
-                          <User className="h-4 w-4 mr-1" />
-                          {worker?.name || 'Unknown Worker'}
-                        </div>
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {new Date(booking.scheduledDate).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          {booking.estimatedDuration} hours
-                        </div>
-                        <div className="font-medium text-gray-900">
-                          ₹{booking.totalAmount}
-                        </div>
-                        {booking.paymentMethod && (
-                          <div className="flex items-center text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                            <CreditCard className="h-3 w-3 mr-1" />
-                            {booking.paymentMethod}
+                        {/* Task Description */}
+                        {booking.taskDescription && (
+                          <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                            <p className="text-xs font-medium text-gray-700 mb-1">Additional Details:</p>
+                            <p className="text-xs sm:text-sm text-gray-600">{booking.taskDescription}</p>
                           </div>
                         )}
-                      </div>
 
-                      {/* Contact Details Section */}
-                      {booking.contactDetailsShared && worker && (
-                        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                          <h5 className="font-medium text-blue-900 mb-2 flex items-center">
-                            <User className="h-4 w-4 mr-2" />
-                            Worker Contact Information
-                          </h5>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                            <div>
-                              <span className="text-blue-700 font-medium">Worker Name:</span>
-                              <span className="ml-2 text-blue-900">{worker.name}</span>
-                            </div>
-                            <div>
-                              <span className="text-blue-700 font-medium">Profession:</span>
-                              <span className="ml-2 text-blue-900">{worker.profession}</span>
-                            </div>
-                            <div>
-                              <span className="text-blue-700 font-medium">Rate:</span>
-                              <span className="ml-2 text-blue-900">₹{worker.hourlyRate}/hour</span>
-                            </div>
-                            <div>
-                              <span className="text-blue-700 font-medium">Experience:</span>
-                              <span className="ml-2 text-blue-900">{worker.experience} years</span>
-                            </div>
-                          </div>
-
-                          {/* Company Proxy Number Section */}
-                          <div className="mt-4 p-3 bg-green-50 border-2 border-green-300 rounded-lg">
-                            <div className="flex items-start">
-                              <div className="flex-shrink-0">
-                                <Phone className="h-5 w-5 text-green-600 mt-0.5" />
+                        {/* Photos Section */}
+                        {booking.photos && (booking.photos.beforeTask || booking.photos.afterTask) && (
+                          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {booking.photos.beforeTask && (
+                              <div className="border border-gray-200 rounded-lg p-2 sm:p-3 bg-gray-50">
+                                <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
+                                  <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                  Before Task
+                                </p>
+                                <img
+                                  src={booking.photos.beforeTask.url}
+                                  alt="Before task"
+                                  className="w-full h-32 sm:h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
+                                  onClick={() => window.open(booking.photos!.beforeTask!.url, '_blank')}
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {new Date(booking.photos.beforeTask.uploadedAt).toLocaleDateString()}
+                                </p>
                               </div>
-                              <div className="ml-3 flex-1">
-                                <div className="flex items-center justify-between">
-                                  <h6 className="text-sm font-semibold text-green-900 flex items-center">
+                            )}
+                            {booking.photos.afterTask && (
+                              <div className="border border-gray-200 rounded-lg p-2 sm:p-3 bg-gray-50">
+                                <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
+                                  <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  After Task
+                                </p>
+                                <img
+                                  src={booking.photos.afterTask.url}
+                                  alt="After task"
+                                  className="w-full h-32 sm:h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
+                                  onClick={() => window.open(booking.photos!.afterTask!.url, '_blank')}
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {new Date(booking.photos.afterTask.uploadedAt).toLocaleDateString()}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 space-x-2 sm:space-x-4 mt-3 gap-y-1">
+                          <div className="flex items-center">
+                            <User className="h-4 w-4 mr-1" />
+                            <span className="truncate">{worker?.name || 'Unknown Worker'}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {new Date(booking.scheduledDate).toLocaleDateString()}
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            {booking.estimatedDuration}h
+                          </div>
+                          <div className="font-medium text-gray-900">
+                            ₹{booking.totalAmount}
+                          </div>
+                          {booking.paymentMethod && (
+                            <div className="flex items-center text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
+                              <CreditCard className="h-3 w-3 mr-1" />
+                              {booking.paymentMethod}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Contact Details Section */}
+                        {booking.contactDetailsShared && worker && (
+                          <div className="mt-4 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <h5 className="font-medium text-blue-900 mb-2 flex items-center text-sm">
+                              <User className="h-4 w-4 mr-2" />
+                              Worker Contact Information
+                            </h5>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+                              <div>
+                                <span className="text-blue-700 font-medium">Worker Name:</span>
+                                <span className="ml-2 text-blue-900">{worker.name}</span>
+                              </div>
+                              <div>
+                                <span className="text-blue-700 font-medium">Profession:</span>
+                                <span className="ml-2 text-blue-900">{worker.profession}</span>
+                              </div>
+                              <div>
+                                <span className="text-blue-700 font-medium">Rate:</span>
+                                <span className="ml-2 text-blue-900">₹{worker.hourlyRate}/h</span>
+                              </div>
+                              <div>
+                                <span className="text-blue-700 font-medium">Experience:</span>
+                                <span className="ml-2 text-blue-900">{worker.experience}y</span>
+                              </div>
+                            </div>
+
+                            {/* Company Proxy Number Section */}
+                            <div className="mt-4 p-2 sm:p-3 bg-green-50 border-2 border-green-300 rounded-lg">
+                              <div className="flex items-start gap-2">
+                                <div className="flex-shrink-0">
+                                  <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 mt-0.5" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h6 className="text-xs sm:text-sm font-semibold text-green-900 flex flex-wrap items-center gap-1">
                                     Contact Your Worker
-                                    <div className="ml-2 group relative">
-                                      <Info className="h-4 w-4 text-green-600 cursor-help" />
-                                      <div className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                                    <div className="group relative">
+                                      <Info className="h-3 w-3 sm:h-4 sm:w-4 text-green-600 cursor-help" />
+                                      <div className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 sm:w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
                                         This is a company-managed number. Calls are forwarded to your assigned worker while protecting their privacy.
                                       </div>
                                     </div>
                                   </h6>
-                                  <Shield className="h-4 w-4 text-green-600" />
+                                  <div className="mt-2">
+                                    <a
+                                      href={`tel:${booking.companyProxyNumber || COMPANY_PROXY_NUMBER}`}
+                                      className="inline-flex items-center text-sm sm:text-lg font-bold text-green-700 hover:text-green-800 break-all"
+                                    >
+                                      <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+                                      {booking.companyProxyNumber || COMPANY_PROXY_NUMBER}
+                                    </a>
+                                  </div>
+                                  <p className="mt-1 sm:mt-2 text-xs text-green-700 leading-relaxed">
+                                    <Shield className="h-2.5 w-2.5 sm:h-3 sm:w-3 inline mr-1" />
+                                    <strong>Privacy Protected:</strong> Your worker's personal number stays private.
+                                  </p>
                                 </div>
-                                <div className="mt-2">
-                                  <a
-                                    href={`tel:${booking.companyProxyNumber || COMPANY_PROXY_NUMBER}`}
-                                    className="inline-flex items-center text-lg font-bold text-green-700 hover:text-green-800"
-                                  >
-                                    <Phone className="h-4 w-4 mr-2" />
-                                    {booking.companyProxyNumber || COMPANY_PROXY_NUMBER}
-                                  </a>
-                                </div>
-                                <p className="mt-2 text-xs text-green-700 leading-relaxed">
-                                  <Shield className="h-3 w-3 inline mr-1" />
-                                  <strong>Privacy Protected:</strong> Call this number to reach your assigned worker.
-                                  Your worker's personal number is kept private for their security.
-                                </p>
-                                <p className="mt-1 text-xs text-green-600">
-                                  📞 Calls to this number will be automatically forwarded to {worker.name}
-                                </p>
                               </div>
                             </div>
-                          </div>
 
-                          <div className="mt-3 text-xs text-blue-700 bg-blue-100 p-2 rounded flex items-start">
-                            <Info className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5" />
-                            <span>
-                              Your booking is confirmed! Use the company number above to coordinate with your worker.
-                              For any issues, contact our support team.
-                            </span>
-                          </div>
-
-                          {/* Live Location Sharing */}
-                          {booking.liveLocationSharing?.enabled && (
-                            <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
-                              <h6 className="font-medium text-purple-900 mb-2 flex items-center">
-                                <Navigation className="h-4 w-4 mr-2" />
-                                {t('live_location.title')}
-                              </h6>
-
-                              {booking.liveLocationSharing.customerLocation && (
-                                <div className="text-sm text-purple-700 mb-2">
-                                  <strong>{t('live_location.your_location')}</strong> {booking.liveLocationSharing.customerLocation.address}
-                                  <span className="text-xs text-purple-600 ml-2">
-                                    (Updated: {new Date(booking.liveLocationSharing.customerLocation.lastUpdated).toLocaleTimeString()})
-                                  </span>
-                                </div>
-                              )}
-
-                              {booking.liveLocationSharing.workerLocation && (
-                                <div className="text-sm text-purple-700">
-                                  <strong>{t('live_location.worker_location')}</strong> {booking.liveLocationSharing.workerLocation.address}
-                                  <span className="text-xs text-purple-600 ml-2">
-                                    (Updated: {new Date(booking.liveLocationSharing.workerLocation.lastUpdated).toLocaleTimeString()})
-                                  </span>
-                                </div>
-                              )}
-
-                              <div className="mt-2 text-xs text-purple-600 bg-purple-100 p-2 rounded">
-                                {t('live_location.both_visible')}
-                              </div>
+                            <div className="mt-2 sm:mt-3 text-xs text-blue-700 bg-blue-100 p-2 rounded flex items-start gap-1">
+                              <Info className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0 mt-0.5" />
+                              <span>
+                                Your booking is confirmed! Use the company number above to coordinate with your worker.
+                              </span>
                             </div>
-                          )}
-                        </div>
-                      )}
-                      {/* Cancel booking (customer) */}
-                      {canCancel(booking.status, booking.contactDetailsShared) && (
-                        <div className="mt-4">
-                          <button
-                            onClick={() => handleCancelBooking(booking.id)}
-                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                          >
-                            {t('btn.cancel_booking')}
-                          </button>
-                        </div>
-                      )}
 
-                      {/* Review section for completed bookings */}
-                      {booking.status === 'completed' && worker && (
-                        <div className="mt-6 border-t pt-4">
-                          <h4 className="text-sm font-medium text-gray-900 mb-2">{t('review.leave_rating')}</h4>
-                          {(() => {
-                            const alreadyReviewed = (worker.reviews || []).some(r => r.bookingId === booking.id && r.customerId === user?.id);
-                            if (alreadyReviewed) {
+                            {/* Live Location Sharing */}
+                            {booking.liveLocationSharing?.enabled && (
+                              <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                <h6 className="font-medium text-purple-900 mb-2 flex items-center">
+                                  <Navigation className="h-4 w-4 mr-2" />
+                                  {t('live_location.title')}
+                                </h6>
+
+                                {booking.liveLocationSharing.customerLocation && (
+                                  <div className="text-sm text-purple-700 mb-2">
+                                    <strong>{t('live_location.your_location')}</strong> {booking.liveLocationSharing.customerLocation.address}
+                                    <span className="text-xs text-purple-600 ml-2">
+                                      (Updated: {new Date(booking.liveLocationSharing.customerLocation.lastUpdated).toLocaleTimeString()})
+                                    </span>
+                                  </div>
+                                )}
+
+                                {booking.liveLocationSharing.workerLocation && (
+                                  <div className="text-sm text-purple-700">
+                                    <strong>{t('live_location.worker_location')}</strong> {booking.liveLocationSharing.workerLocation.address}
+                                    <span className="text-xs text-purple-600 ml-2">
+                                      (Updated: {new Date(booking.liveLocationSharing.workerLocation.lastUpdated).toLocaleTimeString()})
+                                    </span>
+                                  </div>
+                                )}
+
+                                <div className="mt-2 text-xs text-purple-600 bg-purple-100 p-2 rounded">
+                                  {t('live_location.both_visible')}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {/* Cancel booking (customer) */}
+                        {canCancel(booking.status, booking.contactDetailsShared) && (
+                          <div className="mt-4">
+                            <button
+                              onClick={() => handleCancelBooking(booking.id)}
+                              className="inline-flex items-center px-3 py-2 border border-transparent text-xs sm:text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 min-h-9"
+                            >
+                              {t('btn.cancel_booking')}
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Review section for completed bookings */}
+                        {booking.status === 'completed' && worker && (
+                          <div className="mt-4 sm:mt-6 border-t pt-3 sm:pt-4">
+                            <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-2">{t('review.leave_rating')}</h4>
+                            {(() => {
+                              const alreadyReviewed = (worker.reviews || []).some(r => r.bookingId === booking.id && r.customerId === user?.id);
+                              if (alreadyReviewed) {
+                                return (
+                                  <div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded p-3">
+                                    {t('review.thank_you')}
+                                  </div>
+                                );
+                              }
+                              const current = reviewForms[booking.id] || { rating: 0, comment: '' };
                               return (
-                                <div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded p-3">
-                                  {t('review.thank_you')}
+                                <div>
+                              <div className="flex items-center space-x-1 mb-2">
+                                {[1, 2, 3, 4, 5].map(n => (
+                                  <button
+                                    key={n}
+                                    type="button"
+                                    onClick={() => setReviewFormField(booking.id, { rating: n })}
+                                    className={`p-1 rounded ${current.rating >= n ? 'text-yellow-500' : 'text-gray-300'}`}
+                                    aria-label={`Rate ${n}`}
+                                  >
+                                    <Star className="h-4 w-4 sm:h-5 sm:w-5" fill={current.rating >= n ? '#F59E0B' : 'none'} />
+                                  </button>
+                                ))}
+                              </div>
+                              <textarea
+                                rows={2}
+                                className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 text-xs sm:text-sm"
+                                value={current.comment}
+                                onChange={(e) => setReviewFormField(booking.id, { comment: e.target.value })}
+                                placeholder={t('review.comment_placeholder')}
+                              />
+                              <div className="mt-2 sm:mt-3">
+                                <button
+                                  onClick={() => handleSubmitReview(booking.id)}
+                                  className="inline-flex items-center px-3 py-2 border border-transparent text-xs sm:text-sm leading-4 font-medium rounded-md text-white bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500 shadow-sm hover:shadow-md transition-all duration-200 min-h-9"
+                                >
+                                  {t('review.submit')}
+                                </button>
+                              </div>
                                 </div>
                               );
-                            }
-                            const current = reviewForms[booking.id] || { rating: 0, comment: '' };
-                            return (
-                              <div>
-                                <div className="flex items-center space-x-1 mb-2">
-                                  {[1,2,3,4,5].map(n => (
-                                    <button
-                                      key={n}
-                                      type="button"
-                                      onClick={() => setReviewFormField(booking.id, { rating: n })}
-                                      className={`p-1 rounded ${current.rating >= n ? 'text-yellow-500' : 'text-gray-300'}`}
-                                      aria-label={`Rate ${n}`}
-                                    >
-                                      <Star className="h-5 w-5" fill={current.rating >= n ? '#F59E0B' : 'none'} />
-                                    </button>
-                                  ))}
-                                </div>
-                                <textarea
-                                  rows={3}
-                                  className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                                  value={current.comment}
-                                  onChange={(e) => setReviewFormField(booking.id, { comment: e.target.value })}
-                                  placeholder={t('review.comment_placeholder')}
-                                />
-                                <div className="mt-3">
-                                  <button
-                                    onClick={() => handleSubmitReview(booking.id)}
-                                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500 shadow-sm hover:shadow-md transition-all duration-200"
-                                  >
-                                    {t('review.submit')}
-                                  </button>
-                                </div>
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      )}
+                            })()}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
 
             {bookings.filter(booking => {
               if (bookingsSubTab === 'active') {
@@ -1176,18 +1167,18 @@ const CustomerDashboard: React.FC = () => {
                 return ['completed', 'cancelled'].includes(booking.status);
               }
             }).length === 0 && (
-              <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
-                <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">
-                  {bookingsSubTab === 'active' ? 'No Active Bookings' : 'No Completed Bookings'}
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  {bookingsSubTab === 'active'
-                    ? 'You don\'t have any active bookings at the moment'
-                    : 'You don\'t have any completed or cancelled bookings yet'}
-                </p>
-              </div>
-            )}
+                <div className="bg-white rounded-lg shadow-sm border p-6 sm:p-12 text-center">
+                  <Calendar className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
+                  <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-900">
+                    {bookingsSubTab === 'active' ? 'No Active Bookings' : 'No Completed Bookings'}
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm text-gray-500">
+                    {bookingsSubTab === 'active'
+                      ? 'You don\'t have any active bookings at the moment'
+                      : 'You don\'t have any completed or cancelled bookings yet'}
+                  </p>
+                </div>
+              )}
           </div>
         )}
       </div>
@@ -1200,15 +1191,13 @@ const CustomerDashboard: React.FC = () => {
               {/* Step Indicator */}
               <div className="mb-6">
                 <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                    bookingStep === 1 ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md' : 'bg-green-500 text-white'
-                  }`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${bookingStep === 1 ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md' : 'bg-green-500 text-white'
+                    }`}>
                     {bookingStep === 1 ? '1' : <CheckCircle className="h-5 w-5" />}
                   </div>
                   <div className={`h-1 w-16 ${bookingStep === 2 ? 'bg-gradient-to-r from-primary-600 to-primary-700' : 'bg-gray-300'}`}></div>
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                    bookingStep === 2 ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md' : 'bg-gray-300 text-gray-500'
-                  }`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${bookingStep === 2 ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md' : 'bg-gray-300 text-gray-500'
+                    }`}>
                     2
                   </div>
                 </div>
@@ -1224,133 +1213,133 @@ const CustomerDashboard: React.FC = () => {
               {/* Step 1: Booking Form */}
               {bookingStep === 1 && (
                 <form onSubmit={handleBookingSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Task
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                    value={bookingForm.task}
-                    onChange={(e) => setBookingForm(prev => ({ ...prev, task: e.target.value }))}
-                    placeholder="e.g., House Cleaning"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Task
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      value={bookingForm.task}
+                      onChange={(e) => setBookingForm(prev => ({ ...prev, task: e.target.value }))}
+                      placeholder="e.g., House Cleaning"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Description <span className="text-gray-500 text-xs">(Optional)</span>
-                  </label>
-                  <textarea
-                    rows={3}
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                    value={bookingForm.description}
-                    onChange={(e) => setBookingForm(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder="Describe the work needed (optional)..."
-                  />
-                </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Description <span className="text-gray-500 text-xs">(Optional)</span>
+                    </label>
+                    <textarea
+                      rows={3}
+                      className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      value={bookingForm.description}
+                      onChange={(e) => setBookingForm(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Describe the work needed (optional)..."
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Additional Task Details <span className="text-gray-500 text-xs">(Optional)</span>
-                  </label>
-                  <textarea
-                    rows={2}
-                    maxLength={500}
-                    className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                    value={bookingForm.taskDescription}
-                    onChange={(e) => setBookingForm(prev => ({ ...prev, taskDescription: e.target.value }))}
-                    placeholder="Any specific requirements or details... (max 500 characters)"
-                  />
-                  <p className="mt-1 text-xs text-gray-500">
-                    {bookingForm.taskDescription.length}/500 characters
-                  </p>
-                </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Additional Task Details <span className="text-gray-500 text-xs">(Optional)</span>
+                    </label>
+                    <textarea
+                      rows={2}
+                      maxLength={500}
+                      className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      value={bookingForm.taskDescription}
+                      onChange={(e) => setBookingForm(prev => ({ ...prev, taskDescription: e.target.value }))}
+                      placeholder="Any specific requirements or details... (max 500 characters)"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      {bookingForm.taskDescription.length}/500 characters
+                    </p>
+                  </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Before Task Photo <span className="text-gray-500 text-xs">(Optional, Recommended)</span>
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/jpg,image/png"
-                    onChange={handlePhotoChange}
-                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
-                  />
-                  <p className="mt-1 text-xs text-gray-500">
-                    Upload a photo showing the current state. Max 5MB, JPEG/PNG only.
-                  </p>
-                  {bookingForm.beforeTaskPhoto && (
-                    <div className="mt-2 flex items-center text-sm text-green-600">
-                      <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      {bookingForm.beforeTaskPhoto.name} ({(bookingForm.beforeTaskPhoto.size / 1024).toFixed(1)} KB)
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Before Task Photo <span className="text-gray-500 text-xs">(Optional, Recommended)</span>
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png"
+                      onChange={handlePhotoChange}
+                      className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      Upload a photo showing the current state. Max 5MB, JPEG/PNG only.
+                    </p>
+                    {bookingForm.beforeTaskPhoto && (
+                      <div className="mt-2 flex items-center text-sm text-green-600">
+                        <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        {bookingForm.beforeTaskPhoto.name} ({(bookingForm.beforeTaskPhoto.size / 1024).toFixed(1)} KB)
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Date
+                      </label>
+                      <input
+                        type="datetime-local"
+                        required
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                        value={bookingForm.scheduledDate}
+                        onChange={(e) => setBookingForm(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                      />
                     </div>
-                  )}
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Date
-                    </label>
-                    <input
-                      type="datetime-local"
-                      required
-                      className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                      value={bookingForm.scheduledDate}
-                      onChange={(e) => setBookingForm(prev => ({ ...prev, scheduledDate: e.target.value }))}
-                    />
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Duration (hours)
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="12"
+                        required
+                        className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                        value={bookingForm.estimatedDuration}
+                        onChange={(e) => setBookingForm(prev => ({ ...prev, estimatedDuration: Number(e.target.value) }))}
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Duration (hours)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="12"
-                      required
-                      className="w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                      value={bookingForm.estimatedDuration}
-                      onChange={(e) => setBookingForm(prev => ({ ...prev, estimatedDuration: Number(e.target.value) }))}
-                    />
+                  {/* removed women-only option */}
+
+                  <div className="bg-gray-50 p-3 rounded-md">
+                    <div className="flex justify-between text-sm">
+                      <span>Rate: ₹{selectedWorker.hourlyRate}/hour</span>
+                      <span>Duration: {bookingForm.estimatedDuration} hours</span>
+                      <span className="font-medium">Total: ₹{selectedWorker.hourlyRate * bookingForm.estimatedDuration}</span>
+                    </div>
                   </div>
-                </div>
 
-                {/* removed women-only option */}
-
-                <div className="bg-gray-50 p-3 rounded-md">
-                  <div className="flex justify-between text-sm">
-                    <span>Rate: ₹{selectedWorker.hourlyRate}/hour</span>
-                    <span>Duration: {bookingForm.estimatedDuration} hours</span>
-                    <span className="font-medium">Total: ₹{selectedWorker.hourlyRate * bookingForm.estimatedDuration}</span>
+                  <div className="flex space-x-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowBookingForm(false);
+                        setBookingStep(1);
+                        setSelectedPaymentMethod('');
+                      }}
+                      className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 text-white py-2 px-4 rounded-md hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-200 font-medium"
+                    >
+                      Continue to Payment
+                    </button>
                   </div>
-                </div>
-
-                <div className="flex space-x-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowBookingForm(false);
-                      setBookingStep(1);
-                      setSelectedPaymentMethod('');
-                    }}
-                    className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 text-white py-2 px-4 rounded-md hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-200 font-medium"
-                  >
-                    Continue to Payment
-                  </button>
-                </div>
-              </form>
+                </form>
               )}
 
               {/* Step 2: Payment Method Selection */}
@@ -1381,30 +1370,26 @@ const CustomerDashboard: React.FC = () => {
                       type="button"
                       onClick={() => setSelectedPaymentMethod('PhonePe')}
                       disabled={isProcessingPayment}
-                      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center space-x-4 ${
-                        isProcessingPayment
+                      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center space-x-4 ${isProcessingPayment
                           ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60'
                           : selectedPaymentMethod === 'PhonePe'
-                          ? 'border-purple-500 bg-purple-50 shadow-md'
-                          : 'border-gray-200 hover:border-purple-300 hover:bg-purple-50'
-                      }`}
+                            ? 'border-purple-500 bg-purple-50 shadow-md'
+                            : 'border-gray-200 hover:border-purple-300 hover:bg-purple-50'
+                        }`}
                     >
-                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                        selectedPaymentMethod === 'PhonePe' ? 'bg-purple-500' : 'bg-purple-100'
-                      }`}>
-                        <CreditCard className={`h-6 w-6 ${
-                          selectedPaymentMethod === 'PhonePe' ? 'text-white' : 'text-purple-600'
-                        }`} />
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${selectedPaymentMethod === 'PhonePe' ? 'bg-purple-500' : 'bg-purple-100'
+                        }`}>
+                        <CreditCard className={`h-6 w-6 ${selectedPaymentMethod === 'PhonePe' ? 'text-white' : 'text-purple-600'
+                          }`} />
                       </div>
                       <div className="flex-1 text-left">
                         <div className="font-semibold text-gray-900">PhonePe</div>
                         <div className="text-xs text-gray-500">UPI Payment</div>
                       </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        selectedPaymentMethod === 'PhonePe'
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPaymentMethod === 'PhonePe'
                           ? 'border-purple-500 bg-purple-500'
                           : 'border-gray-300'
-                      }`}>
+                        }`}>
                         {selectedPaymentMethod === 'PhonePe' && (
                           <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
                         )}
@@ -1416,30 +1401,26 @@ const CustomerDashboard: React.FC = () => {
                       type="button"
                       onClick={() => setSelectedPaymentMethod('Net Banking')}
                       disabled={isProcessingPayment}
-                      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center space-x-4 ${
-                        isProcessingPayment
+                      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center space-x-4 ${isProcessingPayment
                           ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60'
                           : selectedPaymentMethod === 'Net Banking'
-                          ? 'border-blue-500 bg-blue-50 shadow-md'
-                          : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-                      }`}
+                            ? 'border-blue-500 bg-blue-50 shadow-md'
+                            : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                        }`}
                     >
-                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                        selectedPaymentMethod === 'Net Banking' ? 'bg-blue-500' : 'bg-blue-100'
-                      }`}>
-                        <Building2 className={`h-6 w-6 ${
-                          selectedPaymentMethod === 'Net Banking' ? 'text-white' : 'text-blue-600'
-                        }`} />
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${selectedPaymentMethod === 'Net Banking' ? 'bg-blue-500' : 'bg-blue-100'
+                        }`}>
+                        <Building2 className={`h-6 w-6 ${selectedPaymentMethod === 'Net Banking' ? 'text-white' : 'text-blue-600'
+                          }`} />
                       </div>
                       <div className="flex-1 text-left">
                         <div className="font-semibold text-gray-900">Net Banking</div>
                         <div className="text-xs text-gray-500">All major banks</div>
                       </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        selectedPaymentMethod === 'Net Banking'
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPaymentMethod === 'Net Banking'
                           ? 'border-blue-500 bg-blue-500'
                           : 'border-gray-300'
-                      }`}>
+                        }`}>
                         {selectedPaymentMethod === 'Net Banking' && (
                           <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
                         )}
@@ -1451,30 +1432,26 @@ const CustomerDashboard: React.FC = () => {
                       type="button"
                       onClick={() => setSelectedPaymentMethod('Cash on Delivery')}
                       disabled={isProcessingPayment}
-                      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center space-x-4 ${
-                        isProcessingPayment
+                      className={`w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center space-x-4 ${isProcessingPayment
                           ? 'border-gray-200 bg-gray-50 cursor-not-allowed opacity-60'
                           : selectedPaymentMethod === 'Cash on Delivery'
-                          ? 'border-green-500 bg-green-50 shadow-md'
-                          : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
-                      }`}
+                            ? 'border-green-500 bg-green-50 shadow-md'
+                            : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
+                        }`}
                     >
-                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
-                        selectedPaymentMethod === 'Cash on Delivery' ? 'bg-green-500' : 'bg-green-100'
-                      }`}>
-                        <Banknote className={`h-6 w-6 ${
-                          selectedPaymentMethod === 'Cash on Delivery' ? 'text-white' : 'text-green-600'
-                        }`} />
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${selectedPaymentMethod === 'Cash on Delivery' ? 'bg-green-500' : 'bg-green-100'
+                        }`}>
+                        <Banknote className={`h-6 w-6 ${selectedPaymentMethod === 'Cash on Delivery' ? 'text-white' : 'text-green-600'
+                          }`} />
                       </div>
                       <div className="flex-1 text-left">
                         <div className="font-semibold text-gray-900">Cash on Delivery</div>
                         <div className="text-xs text-gray-500">Pay after service</div>
                       </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        selectedPaymentMethod === 'Cash on Delivery'
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPaymentMethod === 'Cash on Delivery'
                           ? 'border-green-500 bg-green-500'
                           : 'border-gray-300'
-                      }`}>
+                        }`}>
                         {selectedPaymentMethod === 'Cash on Delivery' && (
                           <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
                         )}
@@ -1488,11 +1465,10 @@ const CustomerDashboard: React.FC = () => {
                       type="button"
                       onClick={() => setBookingStep(1)}
                       disabled={isProcessingPayment}
-                      className={`flex-1 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium transition-colors ${
-                        isProcessingPayment
+                      className={`flex-1 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 font-medium transition-colors ${isProcessingPayment
                           ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                           : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-                      }`}
+                        }`}
                     >
                       Back
                     </button>
@@ -1500,11 +1476,10 @@ const CustomerDashboard: React.FC = () => {
                       type="button"
                       onClick={handlePaymentConfirm}
                       disabled={!selectedPaymentMethod || isProcessingPayment}
-                      className={`flex-1 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 font-medium transition-all flex items-center justify-center ${
-                        selectedPaymentMethod && !isProcessingPayment
+                      className={`flex-1 py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 font-medium transition-all flex items-center justify-center ${selectedPaymentMethod && !isProcessingPayment
                           ? 'bg-gradient-to-r from-primary-500 via-accent-400 to-accent-500 text-white hover:from-primary-600 hover:via-accent-500 hover:to-accent-600 focus:ring-accent-500 shadow-sm hover:shadow-md'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      }`}
+                        }`}
                     >
                       {isProcessingPayment ? (
                         <>
