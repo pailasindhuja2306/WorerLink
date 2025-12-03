@@ -20,7 +20,6 @@ const RegisterPage: React.FC = () => {
     confirmPassword: '',
     // Worker specific fields
     profession: '',
-    category: '',
     skills: [] as string[],
     experience: 0,
     hourlyRate: 0,
@@ -135,7 +134,6 @@ const RegisterPage: React.FC = () => {
           ...userData,
           type: 'worker',
           profession: formData.profession,
-          category: formData.category,
           skills: formData.skills,
           experience: formData.experience,
           hourlyRate: formData.hourlyRate,
@@ -374,26 +372,7 @@ const RegisterPage: React.FC = () => {
                     </select>
                   </div>
 
-                  <div>
-                    <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-                      {t('label.category')}
-                    </label>
-                    <select
-                      name="category"
-                      id="category"
-                      required
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-                      value={formData.category}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">{t('select.category')}</option>
-                      {categories.map(category => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

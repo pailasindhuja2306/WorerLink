@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { storage } from '../utils/storage';
 import { Worker, Booking, Customer, WorkerStatistics } from '../types';
 import { districts, skillsByCategory, professions } from '../data/mockData';
-import { User, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Settings, Star, MapPin, DollarSign, Navigation, Map, Phone, Shield, Info, TrendingUp, Award, Target, BarChart3, PieChart } from 'lucide-react';
+import { User, Calendar, Clock, CheckCircle, XCircle, AlertCircle, Settings, Star, MapPin, DollarSign, Navigation, Map, Phone, Shield, Info, TrendingUp, Award, Target, BarChart3, PieChart, LogOut } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { calculateWorkerStatistics, getPerformanceBadge, getSuccessRateColor, getRatingColor } from '../utils/workerStats';
@@ -729,7 +729,8 @@ const WorkerDashboard: React.FC = () => {
                 </button>
               </div>
               <span className="text-xs sm:text-sm text-gray-700 hidden sm:inline truncate">{t('header.welcome')}, {worker.username ? `@${worker.username}` : worker.name}</span>
-              <Link to="/login" className="flex items-center text-xs sm:text-sm text-gray-500 hover:text-gray-700 min-h-9">
+              <Link to="/login" className="flex items-center px-2 sm:px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 text-xs sm:text-sm rounded-md transition-colors min-h-9 font-medium">
+                <LogOut className="h-4 w-4 mr-1 sm:mr-2" />
                 <span className="hidden sm:inline">{t('btn.logout')}</span>
               </Link>
             </div>
@@ -781,11 +782,10 @@ const WorkerDashboard: React.FC = () => {
               <div className="flex space-x-1 sm:space-x-2 border-b border-gray-200 min-w-min">
                 <button
                   onClick={() => setBookingsSubTab('active')}
-                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${
-                    bookingsSubTab === 'active'
+                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${bookingsSubTab === 'active'
                       ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <span className="hidden sm:inline">Active Requests</span>
                   <span className="sm:hidden">Active</span>
@@ -795,11 +795,10 @@ const WorkerDashboard: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setBookingsSubTab('completed')}
-                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${
-                    bookingsSubTab === 'completed'
+                  className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-6 font-semibold text-xs sm:text-sm rounded-t-md transition-all duration-200 whitespace-nowrap min-w-max sm:min-w-0 ${bookingsSubTab === 'completed'
                       ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-md'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <span className="hidden sm:inline">Completed Bookings</span>
                   <span className="sm:hidden">Completed</span>
@@ -820,189 +819,183 @@ const WorkerDashboard: React.FC = () => {
                 }
               })
               .map(booking => {
-              const customer = customers.find(c => c.id === booking.customerId);
-              return (
-                <div key={booking.id} className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-3 sm:gap-0">
-                    <div className="flex-1 w-full">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                        <h3 className="text-base sm:text-lg font-medium text-gray-900 break-words">{booking.task}</h3>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${getStatusColor(booking.status, booking.contactDetailsShared)}`}>
-                          {getStatusIcon(booking.status, booking.contactDetailsShared)}
+                const customer = customers.find(c => c.id === booking.customerId);
+                return (
+                  <div key={booking.id} className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-3 sm:gap-0">
+                      <div className="flex-1 w-full">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                          <h3 className="text-base sm:text-lg font-medium text-gray-900 break-words">{booking.task}</h3>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${getStatusColor(booking.status, booking.contactDetailsShared)}`}>
+                            {getStatusIcon(booking.status, booking.contactDetailsShared)}
                             <span className="ml-1 capitalize">
                               {booking.contactDetailsShared ? t('booking.status.contact_shared') : booking.status.replace('_', ' ')}
                             </span>
-                        </span>
-                      </div>
+                          </span>
+                        </div>
 
-                      {/* Countdown Timer for Pending Worker Response */}
-                      {booking.status === 'worker_assigned' && booking.responseDeadline && timeRemaining[booking.id] !== undefined && timeRemaining[booking.id] > 0 && (
-                        <div className={`mb-3 p-3 rounded-lg border-2 ${
-                          timeRemaining[booking.id] <= 5 * 60 * 1000
-                            ? 'bg-red-50 border-red-300 animate-pulse'
-                            : timeRemaining[booking.id] <= 10 * 60 * 1000
-                            ? 'bg-orange-50 border-orange-300'
-                            : 'bg-blue-50 border-blue-300'
-                        }`}>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <Clock className={`h-5 w-5 mr-2 ${
-                                timeRemaining[booking.id] <= 5 * 60 * 1000
-                                  ? 'text-red-600'
+                        {/* Countdown Timer for Pending Worker Response */}
+                        {booking.status === 'worker_assigned' && booking.responseDeadline && timeRemaining[booking.id] !== undefined && timeRemaining[booking.id] > 0 && (
+                          <div className={`mb-3 p-3 rounded-lg border-2 ${timeRemaining[booking.id] <= 5 * 60 * 1000
+                              ? 'bg-red-50 border-red-300 animate-pulse'
+                              : timeRemaining[booking.id] <= 10 * 60 * 1000
+                                ? 'bg-orange-50 border-orange-300'
+                                : 'bg-blue-50 border-blue-300'
+                            }`}>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center">
+                                <Clock className={`h-5 w-5 mr-2 ${timeRemaining[booking.id] <= 5 * 60 * 1000
+                                    ? 'text-red-600'
+                                    : timeRemaining[booking.id] <= 10 * 60 * 1000
+                                      ? 'text-orange-600'
+                                      : 'text-blue-600'
+                                  }`} />
+                                <div>
+                                  <p className={`text-sm font-bold ${timeRemaining[booking.id] <= 5 * 60 * 1000
+                                      ? 'text-red-900'
+                                      : timeRemaining[booking.id] <= 10 * 60 * 1000
+                                        ? 'text-orange-900'
+                                        : 'text-blue-900'
+                                    }`}>
+                                    {timeRemaining[booking.id] <= 5 * 60 * 1000
+                                      ? '🚨 URGENT: Respond Now!'
+                                      : timeRemaining[booking.id] <= 10 * 60 * 1000
+                                        ? '⚠️ Please Respond Soon'
+                                        : '⏰ Awaiting Your Response'
+                                    }
+                                  </p>
+                                  <p className={`text-xs ${timeRemaining[booking.id] <= 5 * 60 * 1000
+                                      ? 'text-red-700'
+                                      : timeRemaining[booking.id] <= 10 * 60 * 1000
+                                        ? 'text-orange-700'
+                                        : 'text-blue-700'
+                                    }`}>
+                                    Time remaining: <span className="font-mono font-bold">{formatTimeRemaining(timeRemaining[booking.id])}</span>
+                                  </p>
+                                </div>
+                              </div>
+                              <div className={`text-2xl font-mono font-bold ${timeRemaining[booking.id] <= 5 * 60 * 1000
+                                  ? 'text-red-700'
                                   : timeRemaining[booking.id] <= 10 * 60 * 1000
-                                  ? 'text-orange-600'
-                                  : 'text-blue-600'
-                              }`} />
-                              <div>
-                                <p className={`text-sm font-bold ${
-                                  timeRemaining[booking.id] <= 5 * 60 * 1000
-                                    ? 'text-red-900'
-                                    : timeRemaining[booking.id] <= 10 * 60 * 1000
-                                    ? 'text-orange-900'
-                                    : 'text-blue-900'
-                                }`}>
-                                  {timeRemaining[booking.id] <= 5 * 60 * 1000
-                                    ? '🚨 URGENT: Respond Now!'
-                                    : timeRemaining[booking.id] <= 10 * 60 * 1000
-                                    ? '⚠️ Please Respond Soon'
-                                    : '⏰ Awaiting Your Response'
-                                }
-                                </p>
-                                <p className={`text-xs ${
-                                  timeRemaining[booking.id] <= 5 * 60 * 1000
-                                    ? 'text-red-700'
-                                    : timeRemaining[booking.id] <= 10 * 60 * 1000
                                     ? 'text-orange-700'
                                     : 'text-blue-700'
                                 }`}>
-                                  Time remaining: <span className="font-mono font-bold">{formatTimeRemaining(timeRemaining[booking.id])}</span>
-                                </p>
+                                {formatTimeRemaining(timeRemaining[booking.id])}
                               </div>
                             </div>
-                            <div className={`text-2xl font-mono font-bold ${
-                              timeRemaining[booking.id] <= 5 * 60 * 1000
-                                ? 'text-red-700'
+                            <p className={`text-xs mt-2 ${timeRemaining[booking.id] <= 5 * 60 * 1000
+                                ? 'text-red-600'
                                 : timeRemaining[booking.id] <= 10 * 60 * 1000
-                                ? 'text-orange-700'
-                                : 'text-blue-700'
-                            }`}>
-                              {formatTimeRemaining(timeRemaining[booking.id])}
+                                  ? 'text-orange-600'
+                                  : 'text-blue-600'
+                              }`}>
+                              {timeRemaining[booking.id] <= 5 * 60 * 1000
+                                ? '⚠️ This request will expire soon if you don\'t respond! Please accept or reject immediately.'
+                                : 'Please accept or reject this booking request. The customer is waiting for your response.'
+                              }
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Expired Booking Message */}
+                        {booking.status === 'expired' && (
+                          <div className="mb-3 p-3 bg-gray-50 border-2 border-gray-300 rounded-lg">
+                            <div className="flex items-center">
+                              <XCircle className="h-5 w-5 mr-2 text-gray-600" />
+                              <div>
+                                <p className="text-sm font-bold text-gray-900">Request Expired</p>
+                                <p className="text-xs text-gray-600">You did not respond within the 15-minute window. The customer has been notified.</p>
+                              </div>
                             </div>
                           </div>
-                          <p className={`text-xs mt-2 ${
-                            timeRemaining[booking.id] <= 5 * 60 * 1000
-                              ? 'text-red-600'
-                              : timeRemaining[booking.id] <= 10 * 60 * 1000
-                              ? 'text-orange-600'
-                              : 'text-blue-600'
-                          }`}>
-                            {timeRemaining[booking.id] <= 5 * 60 * 1000
-                              ? '⚠️ This request will expire soon if you don\'t respond! Please accept or reject immediately.'
-                              : 'Please accept or reject this booking request. The customer is waiting for your response.'
-                            }
-                          </p>
-                        </div>
-                      )}
+                        )}
 
-                      {/* Expired Booking Message */}
-                      {booking.status === 'expired' && (
-                        <div className="mb-3 p-3 bg-gray-50 border-2 border-gray-300 rounded-lg">
+                        <p className="text-sm text-gray-600 mb-2">{booking.description}</p>
+
+                        {/* Task Description */}
+                        {booking.taskDescription && (
+                          <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
+                            <p className="text-xs font-medium text-gray-700 mb-1">Additional Details:</p>
+                            <p className="text-sm text-gray-600">{booking.taskDescription}</p>
+                          </div>
+                        )}
+
+                        {/* Photos Section */}
+                        {booking.photos && (booking.photos.beforeTask || booking.photos.afterTask) && (
+                          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {booking.photos.beforeTask && (
+                              <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                                <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
+                                  <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                  </svg>
+                                  Before Task Photo
+                                </p>
+                                <img
+                                  src={booking.photos.beforeTask.url}
+                                  alt="Before task"
+                                  className="w-full h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
+                                  onClick={() => window.open(booking.photos!.beforeTask!.url, '_blank')}
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Uploaded: {new Date(booking.photos.beforeTask.uploadedAt).toLocaleDateString()}
+                                </p>
+                              </div>
+                            )}
+                            {booking.photos.afterTask && (
+                              <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                                <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
+                                  <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  After Task Photo
+                                </p>
+                                <img
+                                  src={booking.photos.afterTask.url}
+                                  alt="After task"
+                                  className="w-full h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
+                                  onClick={() => window.open(booking.photos!.afterTask!.url, '_blank')}
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Uploaded: {new Date(booking.photos.afterTask.uploadedAt).toLocaleDateString()}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        <div className="flex items-center text-sm text-gray-500 space-x-4 mb-4 mt-3">
                           <div className="flex items-center">
-                            <XCircle className="h-5 w-5 mr-2 text-gray-600" />
-                            <div>
-                              <p className="text-sm font-bold text-gray-900">Request Expired</p>
-                              <p className="text-xs text-gray-600">You did not respond within the 15-minute window. The customer has been notified.</p>
-                            </div>
+                            <User className="h-4 w-4 mr-1" />
+                            {customer?.name || t('unknown.customer')}
+                          </div>
+                          <div className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            {new Date(booking.scheduledDate).toLocaleDateString()}
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            {booking.estimatedDuration} hours
+                          </div>
+                          <div className="flex items-center">
+                            <DollarSign className="h-4 w-4 mr-1" />
+                            ₹{booking.totalAmount}
                           </div>
                         </div>
-                      )}
 
-                      <p className="text-sm text-gray-600 mb-2">{booking.description}</p>
-
-                      {/* Task Description */}
-                      {booking.taskDescription && (
-                        <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-md">
-                          <p className="text-xs font-medium text-gray-700 mb-1">Additional Details:</p>
-                          <p className="text-sm text-gray-600">{booking.taskDescription}</p>
-                        </div>
-                      )}
-
-                      {/* Photos Section */}
-                      {booking.photos && (booking.photos.beforeTask || booking.photos.afterTask) && (
-                        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {booking.photos.beforeTask && (
-                            <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                              <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
-                                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Before Task Photo
-                              </p>
-                              <img
-                                src={booking.photos.beforeTask.url}
-                                alt="Before task"
-                                className="w-full h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={() => window.open(booking.photos!.beforeTask!.url, '_blank')}
-                              />
-                              <p className="text-xs text-gray-500 mt-1">
-                                Uploaded: {new Date(booking.photos.beforeTask.uploadedAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                          )}
-                          {booking.photos.afterTask && (
-                            <div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                              <p className="text-xs font-medium text-gray-700 mb-2 flex items-center">
-                                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                After Task Photo
-                              </p>
-                              <img
-                                src={booking.photos.afterTask.url}
-                                alt="After task"
-                                className="w-full h-40 object-cover rounded-md cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={() => window.open(booking.photos!.afterTask!.url, '_blank')}
-                              />
-                              <p className="text-xs text-gray-500 mt-1">
-                                Uploaded: {new Date(booking.photos.afterTask.uploadedAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex items-center text-sm text-gray-500 space-x-4 mb-4 mt-3">
-                        <div className="flex items-center">
-                          <User className="h-4 w-4 mr-1" />
-                          {customer?.name || t('unknown.customer')}
-                        </div>
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {new Date(booking.scheduledDate).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          {booking.estimatedDuration} hours
-                        </div>
-                        <div className="flex items-center">
-                          <DollarSign className="h-4 w-4 mr-1" />
-                          ₹{booking.totalAmount}
-                        </div>
-                      </div>
-
-                      {/* Contact Details Section */}
-                      {booking.contactDetailsShared && customer && (
-                        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
-                          <h5 className="font-medium text-green-900 mb-2 flex items-center">
+                        {/* Contact Details Section */}
+                        {booking.contactDetailsShared && customer && (
+                          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
+                            <h5 className="font-medium text-green-900 mb-2 flex items-center">
                               <User className="h-4 w-4 mr-2" />
                               Customer Contact Information
                             </h5>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                            <div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                              <div>
                                 <span className="text-green-700 font-medium">Name:</span>
                                 <span className="ml-2 text-green-900">{customer.name}</span>
-                            </div>
-                            <div>
+                              </div>
+                              <div>
                                 <span className="text-green-700 font-medium">Phone:</span>
                                 <a
                                   href={`tel:${customer.phone}`}
@@ -1010,140 +1003,140 @@ const WorkerDashboard: React.FC = () => {
                                 >
                                   {customer.phone}
                                 </a>
-                            </div>
-                            <div>
+                              </div>
+                              <div>
                                 <span className="text-green-700 font-medium">Email:</span>
                                 <span className="ml-2 text-green-900">{customer.email}</span>
+                              </div>
+                              <div>
+                                <span className="text-green-700 font-medium">Gender:</span>
+                                <span className="ml-2 text-green-900">{customer.gender}</span>
+                              </div>
+                              <div className="col-span-2">
+                                <span className="text-green-700 font-medium">Job Location:</span>
+                                <span className="ml-2 text-green-900">{booking.location.address}</span>
+                              </div>
                             </div>
-                            <div>
-                              <span className="text-green-700 font-medium">Gender:</span>
-                              <span className="ml-2 text-green-900">{customer.gender}</span>
-                            </div>
-                            <div className="col-span-2">
-                              <span className="text-green-700 font-medium">Job Location:</span>
-                              <span className="ml-2 text-green-900">{booking.location.address}</span>
-                            </div>
-                          </div>
 
-                          {/* Privacy Protection Notice */}
-                          <div className="mt-4 p-3 bg-blue-50 border-2 border-blue-300 rounded-lg">
-                            <div className="flex items-start">
-                              <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                              <div className="ml-3 flex-1">
-                                <h6 className="text-sm font-semibold text-blue-900 flex items-center">
-                                  Your Privacy is Protected
-                                  <div className="ml-2 group relative">
-                                    <Info className="h-4 w-4 text-blue-600 cursor-help" />
-                                    <div className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
-                                      Customers contact you through our company number. Your personal number remains private.
+                            {/* Privacy Protection Notice */}
+                            <div className="mt-4 p-3 bg-blue-50 border-2 border-blue-300 rounded-lg">
+                              <div className="flex items-start">
+                                <Shield className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                                <div className="ml-3 flex-1">
+                                  <h6 className="text-sm font-semibold text-blue-900 flex items-center">
+                                    Your Privacy is Protected
+                                    <div className="ml-2 group relative">
+                                      <Info className="h-4 w-4 text-blue-600 cursor-help" />
+                                      <div className="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                                        Customers contact you through our company number. Your personal number remains private.
+                                      </div>
                                     </div>
+                                  </h6>
+                                  <div className="mt-2 space-y-1 text-xs text-blue-700">
+                                    <p className="flex items-start">
+                                      <Phone className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
+                                      <span>
+                                        <strong>Company Number:</strong> {booking.companyProxyNumber || COMPANY_PROXY_NUMBER}
+                                      </span>
+                                    </p>
+                                    <p className="leading-relaxed">
+                                      📞 Customers will call this company number to reach you. Your personal phone number
+                                      is kept private for your security and safety.
+                                    </p>
+                                    <p className="text-blue-600 font-medium">
+                                      ✓ You can call the customer directly using their number above
+                                    </p>
                                   </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="mt-3 text-xs text-green-700 bg-green-100 p-2 rounded flex items-start">
+                              <Info className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5" />
+                              <span>
+                                Contact details verified! You can call the customer directly to coordinate the job.
+                                Customers will reach you through our company number.
+                              </span>
+                            </div>
+
+                            {/* Live Location Sharing */}
+                            {booking.liveLocationSharing?.enabled && (
+                              <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                <h6 className="font-medium text-purple-900 mb-2 flex items-center">
+                                  <Navigation className="h-4 w-4 mr-2" />
+                                  {t('live_location.title')}
                                 </h6>
-                                <div className="mt-2 space-y-1 text-xs text-blue-700">
-                                  <p className="flex items-start">
-                                    <Phone className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0" />
-                                    <span>
-                                      <strong>Company Number:</strong> {booking.companyProxyNumber || COMPANY_PROXY_NUMBER}
-                                    </span>
-                                  </p>
-                                  <p className="leading-relaxed">
-                                    📞 Customers will call this company number to reach you. Your personal phone number
-                                    is kept private for your security and safety.
-                                  </p>
-                                  <p className="text-blue-600 font-medium">
-                                    ✓ You can call the customer directly using their number above
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
 
-                          <div className="mt-3 text-xs text-green-700 bg-green-100 p-2 rounded flex items-start">
-                            <Info className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5" />
-                            <span>
-                              Contact details verified! You can call the customer directly to coordinate the job.
-                              Customers will reach you through our company number.
-                            </span>
-                          </div>
-
-                          {/* Live Location Sharing */}
-                          {booking.liveLocationSharing?.enabled && (
-                            <div className="mt-3 p-3 bg-purple-50 border border-purple-200 rounded-lg">
-                              <h6 className="font-medium text-purple-900 mb-2 flex items-center">
-                                <Navigation className="h-4 w-4 mr-2" />
-                                {t('live_location.title')}
-                              </h6>
-
-                              {booking.liveLocationSharing.workerLocation && (
+                                {booking.liveLocationSharing.workerLocation && (
                                   <div className="text-sm text-purple-700 mb-2">
-                                  <strong>{t('live_location.your_location')}</strong> {booking.liveLocationSharing.workerLocation.address}
-                                  <span className="text-xs text-purple-600 ml-2">
-                                    (Updated: {new Date(booking.liveLocationSharing.workerLocation.lastUpdated).toLocaleTimeString()})
-                                  </span>
-                                </div>
-                              )}
+                                    <strong>{t('live_location.your_location')}</strong> {booking.liveLocationSharing.workerLocation.address}
+                                    <span className="text-xs text-purple-600 ml-2">
+                                      (Updated: {new Date(booking.liveLocationSharing.workerLocation.lastUpdated).toLocaleTimeString()})
+                                    </span>
+                                  </div>
+                                )}
 
-                              {booking.liveLocationSharing.customerLocation && (
+                                {booking.liveLocationSharing.customerLocation && (
                                   <div className="text-sm text-purple-700">
-                                  <strong>{t('live_location.customer_location')}</strong> {booking.liveLocationSharing.customerLocation.address}
-                                  <span className="text-xs text-purple-600 ml-2">
-                                    (Updated: {new Date(booking.liveLocationSharing.customerLocation.lastUpdated).toLocaleTimeString()})
-                                  </span>
+                                    <strong>{t('live_location.customer_location')}</strong> {booking.liveLocationSharing.customerLocation.address}
+                                    <span className="text-xs text-purple-600 ml-2">
+                                      (Updated: {new Date(booking.liveLocationSharing.customerLocation.lastUpdated).toLocaleTimeString()})
+                                    </span>
+                                  </div>
+                                )}
+
+                                <div className="mt-2 text-xs text-purple-600 bg-purple-100 p-2 rounded">
+                                  {t('live_location.both_visible')}
                                 </div>
-                              )}
-
-                              <div className="mt-2 text-xs text-purple-600 bg-purple-100 p-2 rounded">
-                                {t('live_location.both_visible')}
                               </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                            )}
+                          </div>
+                        )}
 
-                      <div className="flex flex-wrap gap-3 mt-4">
-                        {(booking.status === 'pending_admin' || booking.status === 'worker_assigned') && (
-                          <>
+                        <div className="flex flex-wrap gap-3 mt-4">
+                          {(booking.status === 'pending_admin' || booking.status === 'worker_assigned') && (
+                            <>
+                              <button
+                                onClick={() => handleBookingAction(booking.id, 'accept')}
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
+                              >
+                                <CheckCircle className="h-4 w-4 mr-1" />
+                                {t('btn.accept')}
+                              </button>
+                              <button
+                                onClick={() => handleBookingAction(booking.id, 'reject')}
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+                              >
+                                <XCircle className="h-4 w-4 mr-1" />
+                                {t('btn.reject')}
+                              </button>
+                            </>
+                          )}
+
+                          {booking.status === 'accepted' && (
                             <button
-                              onClick={() => handleBookingAction(booking.id, 'accept')}
+                              onClick={() => handleBookingAction(booking.id, 'complete')}
                               className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
                             >
                               <CheckCircle className="h-4 w-4 mr-1" />
-                              {t('btn.accept')}
+                              {t('btn.mark_complete')}
                             </button>
+                          )}
+
+                          {canCancel(booking.status, booking.contactDetailsShared) && (
                             <button
-                              onClick={() => handleBookingAction(booking.id, 'reject')}
+                              onClick={() => handleCancelBooking(booking.id)}
                               className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
                             >
-                              <XCircle className="h-4 w-4 mr-1" />
-                              {t('btn.reject')}
+                              {t('btn.cancel_booking')}
                             </button>
-                          </>
-                        )}
-
-                        {booking.status === 'accepted' && (
-                          <button
-                            onClick={() => handleBookingAction(booking.id, 'complete')}
-                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
-                          >
-                            <CheckCircle className="h-4 w-4 mr-1" />
-                            {t('btn.mark_complete')}
-                          </button>
-                        )}
-
-                        {canCancel(booking.status, booking.contactDetailsShared) && (
-                          <button
-                            onClick={() => handleCancelBooking(booking.id)}
-                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
-                          >
-                            {t('btn.cancel_booking')}
-                          </button>
-                        )}
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
 
             {bookings.filter(booking => {
               if (bookingsSubTab === 'active') {
@@ -1152,18 +1145,18 @@ const WorkerDashboard: React.FC = () => {
                 return booking.status === 'completed';
               }
             }).length === 0 && (
-              <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
-                <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">
-                  {bookingsSubTab === 'active' ? 'No Active Requests' : 'No Completed Bookings'}
-                </h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  {bookingsSubTab === 'active'
-                    ? 'You don\'t have any active booking requests at the moment'
-                    : 'You haven\'t completed any bookings yet'}
-                </p>
-              </div>
-            )}
+                <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
+                  <Calendar className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">
+                    {bookingsSubTab === 'active' ? 'No Active Requests' : 'No Completed Bookings'}
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {bookingsSubTab === 'active'
+                      ? 'You don\'t have any active booking requests at the moment'
+                      : 'You haven\'t completed any bookings yet'}
+                  </p>
+                </div>
+              )}
           </div>
         )}
 
