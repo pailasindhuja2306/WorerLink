@@ -1,4 +1,4 @@
-import { Worker, Customer, Booking, District, Profession, Category, User } from '../types';
+import { Worker, Customer, Booking, District, Profession, Category } from '../types';
 
 export const districts: District[] = [
   { id: '1', name: 'Chittoor', state: 'Andhra Pradesh' },
@@ -164,6 +164,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2023-01-16'),
     appliedDate: new Date('2023-01-15'),
+    role: ''
   },
   {
     id: '2',
@@ -194,6 +195,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2022-11-21'),
     appliedDate: new Date('2022-11-20'),
+    role: ''
   },
   {
     id: '3',
@@ -218,6 +220,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2023-03-11'),
     appliedDate: new Date('2023-03-10'),
+    role: ''
   },
   {
     id: '4',
@@ -241,6 +244,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2022-08-16'),
     appliedDate: new Date('2022-08-15'),
+    role: ''
   },
   {
     id: '5',
@@ -265,6 +269,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2023-06-02'),
     appliedDate: new Date('2023-06-01'),
+    role: ''
   },
   {
     id: '6',
@@ -295,6 +300,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2022-09-11'),
     appliedDate: new Date('2022-09-10'),
+    role: ''
   },
   {
     id: '7',
@@ -325,6 +331,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2022-12-06'),
     appliedDate: new Date('2022-12-05'),
+    role: ''
   },
   {
     id: '8',
@@ -355,6 +362,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2023-02-15'),
     appliedDate: new Date('2023-02-14'),
+    role: ''
   },
   {
     id: '9',
@@ -385,6 +393,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2022-10-21'),
     appliedDate: new Date('2022-10-20'),
+    role: ''
   },
   {
     id: '10',
@@ -409,6 +418,7 @@ export const mockWorkers: Worker[] = [
     approvalStatus: 'approved',
     panchayatApprovalDate: new Date('2023-04-09'),
     appliedDate: new Date('2023-04-08'),
+    role: ''
   },
 ];
 
@@ -432,6 +442,7 @@ export const mockCustomers: Customer[] = [
       maxDistance: 10,
     },
     createdAt: new Date('2023-05-15'),
+    role: ''
   },
   {
     id: '2',
@@ -452,6 +463,7 @@ export const mockCustomers: Customer[] = [
       maxDistance: 5,
     },
     createdAt: new Date('2023-07-20'),
+    role: ''
   },
 ];
 
@@ -472,6 +484,7 @@ export const mockAdmin: User = {
   },
   type: 'admin',
   createdAt: new Date('2023-01-01'),
+  role: ''
 };
 
 export const mockBookings: Booking[] = [
@@ -511,4 +524,23 @@ export const mockBookings: Booking[] = [
       district: 'Andheri West',
     },
   },
-];
+]; export interface User {
+  role: string;
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  district: string;
+  gender: 'male' | 'female' | 'other';
+  currentLocation?: {
+    latitude: number;
+    longitude: number;
+    address: string;
+    lastUpdated: Date;
+  };
+  locationSharingEnabled?: boolean; // For live location sharing
+  type: 'customer' | 'worker' | 'admin';
+  createdAt: Date;
+}
+

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { SupportRequest } from '../types';
+import { storage } from '../utils/storage';
 
 const SupportWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,10 +10,18 @@ const SupportWidget: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const { user } = useAuth();
 
+  // user.role may not be present on the User type; compute at runtime
+  const isAdmin = !!user && (user as any).role === 'admin';
+
+  // Hide support widget for admins (they have a dedicated support panel in admin dashboard)
+  if (!user || isAdmin) {
+    return null;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!message.trim()) {
+    if (!message.trim() || !user || isAdmin) {
       return;
     }
 
@@ -29,7 +38,24 @@ const SupportWidget: React.FC = () => {
       createdAt: new Date(),
     };
 
-    // TODO: In production, send this to your backend API
+    // Store support request in storage
+    const allRequests = localStorage.getItem('supportRequests');
+    const requests = allRequests ? JSON.parse(allRequests) : [];
+    requests.push(supportRequest);
+    localStorage.setItem('supportRequests', JSON.stringify(requests));
+
+    // Create notification for admin
+    const notification = {
+      id: `support_${Date.now()}`,
+      userId: 'admin', // Route to admin
+      title: `Support Request from ${user?.name}`,
+      message: `${user?.name} (${(user as any).role}) has submitted a support request: "${message.trim().substring(0, 50)}..."`,
+      type: 'system' as const,
+      isRead: false,
+      createdAt: new Date(),
+    };
+    storage.addNotification(notification);
+
     console.log('Support Request:', supportRequest);
 
     // Simulate API call
@@ -43,7 +69,7 @@ const SupportWidget: React.FC = () => {
         setShowSuccess(false);
         setIsOpen(false);
       }, 3000);
-    }, 500);
+    }, 1000);
   };
 
   return (
@@ -53,7 +79,7 @@ const SupportWidget: React.FC = () => {
         <div className="mb-4 w-80 sm:w-96 bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden animate-slideUp">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 flex justify-between items-center">
-            <h3 className="text-white font-semibold text-lg">Need Help?</h3>
+            <h3 className="text-white font-semibold text-lg">Contact Admin</h3>
             <button
               onClick={() => setIsOpen(false)}
               className="text-white hover:text-gray-200 transition-colors"

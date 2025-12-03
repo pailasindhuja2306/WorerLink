@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Worker, Customer } from '../types';
+import { Worker, Customer } from '../types';
+import { User } from "../data/mockData";
 import { districts, categories, professions, skillsByCategory } from '../data/mockData';
 import { Users, UserCheck, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -53,11 +54,11 @@ const RegisterPage: React.FC = () => {
         },
         (error) => {
           console.error('Error getting location:', error);
-            setError(t('error.location_unavailable'));
+          setError(t('error.location_unavailable'));
         }
       );
     } else {
-        setError(t('error.geolocation_unsupported'));
+      setError(t('error.geolocation_unsupported'));
     }
   };
 
@@ -331,7 +332,7 @@ const RegisterPage: React.FC = () => {
                   {t('label.current_location')}
                 </label>
                 <div className="mt-1 flex space-x-2">
-                    <button
+                  <button
                     type="button"
                     onClick={getCurrentLocation}
                     className="flex-1 bg-gray-100 text-gray-700 py-2 px-3 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
@@ -372,7 +373,7 @@ const RegisterPage: React.FC = () => {
                     </select>
                   </div>
 
-                  
+
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -513,7 +514,7 @@ const RegisterPage: React.FC = () => {
             </div>
 
             <div className="text-center">
-                <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600">
                 {t('auth.already_account')}{' '}
                 <Link
                   to="/login"

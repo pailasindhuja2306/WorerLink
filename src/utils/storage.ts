@@ -1,4 +1,5 @@
-import { User, Worker, Customer, Booking, Notification } from '../types';
+import { Worker, Customer, Booking, Notification } from '../types';
+import { User } from "../data/mockData";
 
 const STORAGE_KEYS = {
   USERS: 'labourlink_users',

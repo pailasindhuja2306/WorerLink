@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Worker, Customer } from '../types';
+import { Worker, Customer } from '../types';
+import { User } from "../data/mockData";
 import { storage } from '../utils/storage';
 
 interface AuthContextType {
@@ -82,6 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): React.ReactElemen
         type: userData.type || 'customer',
         gender: userData.gender || 'male',
         createdAt: new Date(),
+        role: ''
       };
 
       // Add to appropriate storage based on user type
